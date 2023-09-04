@@ -1,2 +1,9 @@
-# did-hedera-api
-Manage Hedera DID document via a simple REST API
+# DID Hedera API
+
+A Simple REST API to manage Hedera DID documents.
+
+## Install
+
+```
+npm install
+```

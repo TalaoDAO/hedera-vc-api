@@ -1,0 +1,48 @@
+components:
+    examples: {}
+    headers: {}
+    parameters: {}
+    requestBodies: {}
+    responses: {}
+    schemas:
+        DID:
+            properties:
+                id:
+                    type: string
+            required:
+                - id
+            type: object
+            additionalProperties: false
+    securitySchemes: {}
+info:
+    title: did-hedera-api
+    version: 0.0.1
+    description: 'REST API to manage Hedera DID Documents'
+    license:
+        name: MIT
+    contact:
+        name: 'Olivier Scherrer '
+        email: olivier.scherrer@meranti.fr
+openapi: 3.0.0
+paths:
+    '/did/{didId}':
+        get:
+            operationId: GetDid
+            responses:
+                '200':
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DID'
+            security: []
+            parameters:
+                -
+                    in: path
+                    name: didId
+                    required: true
+                    schema:
+                        type: string
+servers:
+    -
+        url: /
