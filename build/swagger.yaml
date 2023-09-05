@@ -15,9 +15,9 @@ components:
             additionalProperties: false
     securitySchemes: {}
 info:
-    title: did-hedera-api
+    title: hedera-vc-api
     version: 0.0.1
-    description: 'REST API to manage Hedera DID Documents'
+    description: 'REST API to manage Hedera Verifiable Credentials, Presentations and DIDs'
     license:
         name: MIT
     contact:

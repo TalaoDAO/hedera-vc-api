@@ -1,7 +1,7 @@
 {
-  "name": "did-hedera-api",
+  "name": "hedera-vc-api",
   "version": "0.0.1",
-  "description": "REST API to manage Hedera DID Documents",
+  "description": "REST API to manage Hedera Verifiable Credentials, Presentations and DIDs",
   "scripts": {
     "clean": "rm -rf ./dist/*",
     "lint": "eslint ./src/ --ext .ts --max-warnings 0",
