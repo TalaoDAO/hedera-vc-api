@@ -1,0 +1,48 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "hedera-vc-api",
+		"version": "0.0.1",
+		"description": "REST API to manage Hedera Verifiable Credentials, Presentations and DIDs",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Olivier Scherrer ",
+			"email": "olivier.scherrer@meranti.fr"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/hedera/balance": {
+			"get": {
+				"operationId": "GetBalance",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
