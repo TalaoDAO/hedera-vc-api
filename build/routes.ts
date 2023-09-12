@@ -3,20 +3,12 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { AccountsController } from './../src/did/didController';
+import { HederaController } from './../src/hedera/hederaController';
 import type { RequestHandler, Router } from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "DID": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -27,13 +19,12 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.get('/did/:didId',
-            ...(fetchMiddlewares<RequestHandler>(AccountsController)),
-            ...(fetchMiddlewares<RequestHandler>(AccountsController.prototype.getDid)),
+        app.get('/hedera/balance',
+            ...(fetchMiddlewares<RequestHandler>(HederaController)),
+            ...(fetchMiddlewares<RequestHandler>(HederaController.prototype.getBalance)),
 
-            function AccountsController_getDid(request: any, response: any, next: any) {
+            function HederaController_getBalance(request: any, response: any, next: any) {
             const args = {
-                    didId: {"in":"path","name":"didId","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -42,10 +33,10 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new AccountsController();
+                const controller = new HederaController();
 
 
-              const promise = controller.getDid.apply(controller, validatedArgs as any);
+              const promise = controller.getBalance.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
