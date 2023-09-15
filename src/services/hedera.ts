@@ -1,10 +1,11 @@
 // hedera sdk is CommonJS and won't be transpiled properly if not "required".
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { Client, Hbar, PrivateKey, TopicCreateTransaction, FileId } = require("@hashgraph/sdk");
+const { Client, Hbar, PrivateKey, TopicCreateTransaction, FileId, FileDeleteTransaction } = require("@hashgraph/sdk");
 
-import { HcsIdentityNetwork, HcsIdentityNetworkBuilder } from "@hashgraph/did-sdk-js";
+import { HcsIdentityNetwork } from "@hashgraph/did-sdk-js";
 
 import envVars, { getEnvVar } from "./envVars";
+import { SignedHcsIdentityNetworkBuilder } from "../utils/SignedHcsIdentityNetworkBuilder";
 
 let hederaClient: typeof Client;
 
@@ -52,7 +53,8 @@ interface AddressBookParams {
 }
 
 export async function createIdentityNetwork(addressBook: AddressBookParams): Promise<HcsIdentityNetwork> {
-  return new HcsIdentityNetworkBuilder()
+  return new SignedHcsIdentityNetworkBuilder()
+    .setAdminKey(operatorKey)
     .setNetwork(envVars.HEDERA_NETWORK)
     .setAppnetName(addressBook.appnetName)
     .addAppnetDidServer(addressBook.appnetDidServers[0])
@@ -77,6 +79,19 @@ export async function loadIdentityNetwork() {
 
 export function getIdentityNetwork(): HcsIdentityNetwork | undefined {
   return identityNetwork;
+}
+
+export async function deleteIdentityNetworkFromFileId(addressBookFileId: typeof FileId) {
+  const tx = await new FileDeleteTransaction()
+    .setFileId(addressBookFileId)
+    .setMaxTransactionFee(new Hbar(2))
+    .freezeWith(hederaClient);
+
+  const signedTx = await tx.sign(operatorKey);
+
+  const submitTx = await signedTx.execute(hederaClient);
+
+  return submitTx.getReceipt(hederaClient);
 }
 
 export default hederaClient;

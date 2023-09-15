@@ -127,7 +127,7 @@
 				}
 			}
 		},
-		"/admin/view/{addressBookFileId}": {
+		"/admin/{addressBookFileId}": {
 			"get": {
 				"operationId": "LoadIdentityNetwork",
 				"responses": {
@@ -145,6 +145,30 @@
 										}
 									]
 								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "addressBookFileId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteIdentityNetwork",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
 							}
 						}
 					}

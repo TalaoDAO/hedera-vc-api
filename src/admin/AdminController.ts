@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Path, Post, Route, ValidateError } from "tsoa";
+import { Body, Controller, Delete, Get, Path, Post, Route, ValidateError } from "tsoa";
 
-import { initIdentityNetworkFromAddressBook } from "../services/hedera";
+import { initIdentityNetworkFromAddressBook, deleteIdentityNetworkFromFileId } from "../services/hedera";
 import { getApplicationStatus, initApplication } from "./admin";
 
 /**
@@ -36,13 +36,34 @@ export class AdminController extends Controller {
    * @example 0.0.1907569
    * @returns
    */
-  @Get("view/{addressBookFileId}")
+  @Get("{addressBookFileId}")
   public async loadIdentityNetwork(@Path() addressBookFileId: string) {
     try {
       const didNetwork = await initIdentityNetworkFromAddressBook(addressBookFileId);
 
       return didNetwork.getAddressBook();
     } catch (err) {
+      console.error(err);
+      return new ValidateError(
+        {
+          addressBookFileId: {
+            value: addressBookFileId,
+            message: "Invalid Address Book File Id"
+          }
+        },
+        "Invalid Address Book File Id"
+      );
+    }
+  }
+
+  @Delete("{addressBookFileId}")
+  public async deleteIdentityNetwork(@Path() addressBookFileId: string) {
+    try {
+      const receipt = await deleteIdentityNetworkFromFileId(addressBookFileId);
+
+      return receipt.status;
+    } catch (err) {
+      console.error(err);
       return new ValidateError(
         {
           addressBookFileId: {
