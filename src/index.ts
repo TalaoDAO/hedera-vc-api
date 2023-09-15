@@ -2,12 +2,16 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express, { NextFunction, Request, Response, json, urlencoded } from "express";
+import { ValidateError } from "tsoa";
 import helmet from "helmet";
 import { AddressInfo } from "net";
 import swaggerUi from "swagger-ui-express";
 
 import { RegisterRoutes } from "../build/routes";
-import { ValidateError } from "tsoa";
+
+import { loadIdentityNetwork } from "./services/hedera";
+import { APPLICATION_STATUS, getApplicationStatus } from "./admin/admin";
+import { getEnvVar } from "./services/envVars";
 
 const app = express();
 
@@ -44,7 +48,27 @@ app.get("/", function (_req, res) {
   res.send("Welcome to Solide Network!");
 });
 
-RegisterRoutes(app);
+async function initApp() {
+  await loadIdentityNetwork();
+
+  const applicationStatus = getApplicationStatus();
+
+  if (applicationStatus.status === APPLICATION_STATUS.INITIALIZING) {
+    console.warn(
+      `Warning: application is running in INITIALIZING mode. Please initialize it and restart after setting the HEDERA_ADDRESS_BOOK_FILEID environment variable`
+    );
+  }
+
+  if (applicationStatus.status === APPLICATION_STATUS.ERROR) {
+    console.error(
+      `Error: HEDERA_ADDRESS_BOOK_FILEID is invalid. Current value is '${getEnvVar("HEDERA_ADDRESS_BOOK_FILEID")}'`
+    );
+  }
+
+  RegisterRoutes(app);
+}
+
+initApp();
 
 /**
  * Error handling

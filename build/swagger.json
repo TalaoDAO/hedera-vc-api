@@ -5,7 +5,83 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"AppnetCreationParams": {
+				"properties": {
+					"appnetName": {
+						"type": "string"
+					},
+					"appnetDidServers": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"appnetName",
+					"appnetDidServers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddressBook": {
+				"type": "string",
+				"description": "Appnet's address book for HCS identity network."
+			},
+			"FieldErrors": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"properties": {
+						"value": {},
+						"message": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"message"
+					],
+					"type": "object"
+				}
+			},
+			"ValidateError": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"fields": {
+						"$ref": "#/components/schemas/FieldErrors"
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"status",
+					"fields"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"APPLICATION_STATUS": {
+				"enum": [
+					"INITIALIZING",
+					"ERROR",
+					"OK"
+				],
+				"type": "string"
+			}
+		},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -22,15 +98,93 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/hedera/balance": {
-			"get": {
-				"operationId": "GetBalance",
+		"/admin/init": {
+			"post": {
+				"operationId": "CreateIdentityNetwork",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AppnetCreationParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/view/{addressBookFileId}": {
+			"get": {
+				"operationId": "LoadIdentityNetwork",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/AddressBook"
+										},
+										{
+											"$ref": "#/components/schemas/ValidateError"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "addressBookFileId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/status": {
+			"get": {
+				"operationId": "GetVerboseStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"status": {
+											"$ref": "#/components/schemas/APPLICATION_STATUS"
+										}
+									},
+									"required": [
+										"message",
+										"status"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
