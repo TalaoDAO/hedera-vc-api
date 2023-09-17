@@ -51,6 +51,27 @@ const models: TsoaRoute.Models = {
         "enums": ["INITIALIZING","ERROR","OK"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicKey": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "publicKeyBase58": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AppDidDocument": {
+        "dataType": "refObject",
+        "properties": {
+            "@context": {"dataType":"string","required":true},
+            "id": {"dataType":"string","required":true},
+            "publicKey": {"dataType":"array","array":{"dataType":"refObject","ref":"PublicKey"},"required":true},
+            "authentication": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 

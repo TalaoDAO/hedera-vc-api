@@ -80,6 +80,56 @@
 					"OK"
 				],
 				"type": "string"
+			},
+			"PublicKey": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"publicKeyBase58": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"type",
+					"publicKeyBase58"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AppDidDocument": {
+				"properties": {
+					"@context": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"publicKey": {
+						"items": {
+							"$ref": "#/components/schemas/PublicKey"
+						},
+						"type": "array"
+					},
+					"authentication": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"publicKey",
+					"authentication"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -226,7 +276,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"$ref": "#/components/schemas/AppDidDocument"
 								}
 							}
 						}
