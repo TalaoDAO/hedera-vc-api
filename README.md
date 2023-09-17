@@ -2,10 +2,6 @@
 
 A Simple REST API to manage Hedera Verifiable Credentials, Verifiable Presentations and DIDs.
 
-Implements a standard API: https://w3c-ccg.github.io/vc-api/#issue-credential
-Is inspired by https://www.spruceid.dev/didkit/didkit-packages/http-server
-Is a wrapper around the official JS SDK: https://github.com/hashgraph/did-sdk-js
-
 ## Install
 
 ```
@@ -49,3 +45,10 @@ You'll first have to setup an address book.
 5. When executing, copy the file's `x.y.z` identifier.
 6. set a new `HEDERA_ADDRESS_BOOK_FILEID` environment variable with the value
 7. Restart the app with the environment variable set, you should now be in "OK" mode. You can check it with the `GET /admin/status` method.
+
+## Literature
+
+[Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/#issue-credential)
+[SpruceId, An existing implementation](https://www.spruceid.dev/didkit/didkit-packages/http-server)
+[Hedera Tech Insights: Maintaining a DID registry](https://hedera.com/blog/maintaining-a-decentralized-identity-registry-with-hedera)
+[The Hedera JS DID SDK](https://github.com/hashgraph/did-sdk-js)

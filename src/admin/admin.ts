@@ -2,6 +2,8 @@ import { ValidateError } from "tsoa";
 
 import { createTopic, createIdentityNetwork, getIdentityNetwork } from "../services/hedera";
 import { hasEnvVar } from "../services/envVars";
+import { operatorKey } from "../services/hedera";
+import { getDidDocument, publishDidDocument } from "../services/did";
 
 interface InitApplicationParams {
   appnetName: string;
@@ -33,8 +35,15 @@ export async function initApplication({ appnetName, appnetDidServers }: InitAppl
   };
 
   console.log(`Creating AddressBook ${JSON.stringify(addressBook, undefined, 2)}`);
+  const identityNetwork = await createIdentityNetwork(addressBook);
 
-  return createIdentityNetwork(addressBook);
+  const didDocument = getDidDocument(identityNetwork, operatorKey);
+  console.log(`Creating DidDocument ${didDocument.toJSON()}`);
+
+  console.log(`Publishing DidDocument`);
+  await publishDidDocument(identityNetwork, didDocument);
+
+  return identityNetwork;
 }
 
 export function getApplicationStatus() {

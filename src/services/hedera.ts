@@ -52,7 +52,7 @@ interface AddressBookParams {
   appnetDidServers: string[];
 }
 
-export async function createIdentityNetwork(addressBook: AddressBookParams): Promise<HcsIdentityNetwork> {
+export function createIdentityNetwork(addressBook: AddressBookParams) {
   return new SignedHcsIdentityNetworkBuilder()
     .setAdminKey(operatorKey)
     .setNetwork(envVars.HEDERA_NETWORK)
@@ -92,6 +92,10 @@ export async function deleteIdentityNetworkFromFileId(addressBookFileId: typeof 
   const submitTx = await signedTx.execute(hederaClient);
 
   return submitTx.getReceipt(hederaClient);
+}
+
+export function operatorSignMessage(msg: Uint8Array) {
+  return operatorKey.sign(msg);
 }
 
 export default hederaClient;

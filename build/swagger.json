@@ -6,25 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"AppnetCreationParams": {
-				"properties": {
-					"appnetName": {
-						"type": "string"
-					},
-					"appnetDidServers": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"appnetName",
-					"appnetDidServers"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"AddressBook": {
 				"type": "string",
 				"description": "Appnet's address book for HCS identity network."
@@ -73,6 +54,25 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AppnetCreationParams": {
+				"properties": {
+					"appnetName": {
+						"type": "string"
+					},
+					"appnetDidServers": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"appnetName",
+					"appnetDidServers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"APPLICATION_STATUS": {
 				"enum": [
 					"INITIALIZING",
@@ -98,36 +98,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/admin/init": {
-			"post": {
-				"operationId": "CreateIdentityNetwork",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/AppnetCreationParams"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/admin/{addressBookFileId}": {
+		"/addressbook/{addressBookFileId}": {
 			"get": {
 				"operationId": "LoadIdentityNetwork",
 				"responses": {
@@ -186,6 +157,35 @@
 				]
 			}
 		},
+		"/admin/init": {
+			"post": {
+				"operationId": "CreateIdentityNetwork",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AppnetCreationParams"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/admin/status": {
 			"get": {
 				"operationId": "GetVerboseStatus",
@@ -208,6 +208,25 @@
 										"status"
 									],
 									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/did": {
+			"get": {
+				"operationId": "GetDidDocument",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
 								}
 							}
 						}
