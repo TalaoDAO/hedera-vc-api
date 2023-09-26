@@ -49,7 +49,7 @@ You'll first have to setup an address book.
 ## Docker
 
 You may also run this application using Docker. Example of a docker file.
-You'll find our [images here](https://hub.docker.com/repository/docker/meranti/hedera-vc-api/general).
+You'll find our [images here](https://hub.docker.com/r/meranti/hedera-vc-api/tags).
 
 
 ```yaml
@@ -71,7 +71,8 @@ services:
 
 ## Literature
 
-[Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/#issue-credential)
-[SpruceId, An existing implementation](https://www.spruceid.dev/didkit/didkit-packages/http-server)
-[Hedera Tech Insights: Maintaining a DID registry](https://hedera.com/blog/maintaining-a-decentralized-identity-registry-with-hedera)
-[The Hedera JS DID SDK](https://github.com/hashgraph/did-sdk-js)
+* [Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/#issue-credential)
+* [SpruceId, An existing implementation](https://www.spruceid.dev/didkit/didkit-packages/http-server)
+* [Hedera Tech Insights: Maintaining a DID registry](https://hedera.com/blog/maintaining-a-decentralized-identity-registry-with-hedera)
+* [The Hedera JS DID SDK](https://github.com/hashgraph/did-sdk-js)
+
