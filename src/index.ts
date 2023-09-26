@@ -45,7 +45,7 @@ app.use(
 app.use(json());
 
 app.get("/", function (_req, res) {
-  res.send("Welcome to Solide Network!");
+  res.send("Welcome to Hedera VC API!");
 });
 
 async function initApp() {

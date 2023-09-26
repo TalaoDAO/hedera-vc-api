@@ -46,6 +46,29 @@ You'll first have to setup an address book.
 6. set a new `HEDERA_ADDRESS_BOOK_FILEID` environment variable with the value
 7. Restart the app with the environment variable set, you should now be in "OK" mode. You can check it with the `GET /admin/status` method.
 
+## Docker
+
+You may also run this application using Docker. Example of a docker file.
+You'll find our [images here](https://hub.docker.com/repository/docker/meranti/hedera-vc-api/general).
+
+
+```yaml
+version: "3.6"
+
+services:
+  hedera-vc-api:
+    image: meranti/hedera-vc-api:alpha-1
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      - HEDERA_ACCOUNT_ID=<x.y.z>
+      - HEDERA_PRIVATE_KEY=<b8104000..4502f>
+      - HEDERA_ADDRESS_BOOK_FILEID=<x.y.z>
+      - HEDERA_NETWORK=<testnet | mainnet>
+      - CRYPTO_SECRET=<any string>
+```
+
 ## Literature
 
 [Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/#issue-credential)
