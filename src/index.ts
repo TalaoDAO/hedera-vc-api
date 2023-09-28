@@ -9,9 +9,9 @@ import swaggerUi from "swagger-ui-express";
 
 import { RegisterRoutes } from "../build/routes";
 
-import { loadIdentityNetwork } from "./services/hedera";
+import { loadDidDocument } from "./services/did";
 import { APPLICATION_STATUS, getApplicationStatus } from "./admin/admin";
-import { getEnvVar } from "./services/envVars";
+import { getEnvVar, hasEnvVar } from "./services/envVars";
 
 const app = express();
 
@@ -49,20 +49,20 @@ app.get("/", function (_req, res) {
 });
 
 async function initApp() {
-  await loadIdentityNetwork();
+  if (hasEnvVar("HEDERA_DID")) {
+    await loadDidDocument(getEnvVar("HEDERA_DID")!);
+  }
 
   const applicationStatus = getApplicationStatus();
 
   if (applicationStatus.status === APPLICATION_STATUS.INITIALIZING) {
     console.warn(
-      `Warning: application is running in INITIALIZING mode. Please initialize it and restart after setting the HEDERA_ADDRESS_BOOK_FILEID environment variable`
+      `Warning: application is running in INITIALIZING mode. Please initialize it and restart after setting the HEDERA_DID environment variable`
     );
   }
 
   if (applicationStatus.status === APPLICATION_STATUS.ERROR) {
-    console.error(
-      `Error: HEDERA_ADDRESS_BOOK_FILEID is invalid. Current value is '${getEnvVar("HEDERA_ADDRESS_BOOK_FILEID")}'`
-    );
+    console.error(`Error: HEDERA_DID is invalid. Current value is '${getEnvVar("HEDERA_DID")}'`);
   }
 
   RegisterRoutes(app);

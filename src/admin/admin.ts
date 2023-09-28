@@ -1,14 +1,7 @@
-import { ValidateError } from "tsoa";
-
-import { createTopic, createIdentityNetwork, getIdentityNetwork } from "../services/hedera";
+import hederaClient from "../services/hedera";
 import { hasEnvVar } from "../services/envVars";
 import { operatorKey } from "../services/hedera";
-import { getDidDocument, publishDidDocument } from "../services/did";
-
-interface InitApplicationParams {
-  appnetName: string;
-  appnetDidServers: string[];
-}
+import { createDidDocument, getDidDocument, registerDidDocument } from "../services/did";
 
 export const enum APPLICATION_STATUS {
   INITIALIZING = "INITIALIZING",
@@ -16,49 +9,30 @@ export const enum APPLICATION_STATUS {
   OK = "OK"
 }
 
-export async function initApplication({ appnetName, appnetDidServers }: InitApplicationParams) {
-  let didTopicId, vcTopicId;
+export function initApplication() {
+  console.log(`Creating DidDocument...`);
+  createDidDocument({
+    privateKey: operatorKey,
+    client: hederaClient
+  });
 
-  try {
-    didTopicId = await createTopic(true);
-    vcTopicId = await createTopic(true);
-  } catch (err) {
-    console.error(err);
-    throw new ValidateError({}, "Unable to create did and vc topic ids");
-  }
-
-  const addressBook = {
-    appnetName,
-    didTopicId,
-    vcTopicId,
-    appnetDidServers
-  };
-
-  console.log(`Creating AddressBook ${JSON.stringify(addressBook, undefined, 2)}`);
-  const identityNetwork = await createIdentityNetwork(addressBook);
-
-  const didDocument = getDidDocument(identityNetwork, operatorKey);
-  console.log(`Creating DidDocument ${didDocument.toJSON()}`);
-
-  console.log(`Publishing DidDocument`);
-  await publishDidDocument(identityNetwork, didDocument);
-
-  return identityNetwork;
+  console.log(`Publishing DidDocument...`);
+  return registerDidDocument();
 }
 
 export function getApplicationStatus() {
-  if (!hasEnvVar("HEDERA_ADDRESS_BOOK_FILEID")) {
+  if (!hasEnvVar("HEDERA_DID")) {
     return {
       status: APPLICATION_STATUS.INITIALIZING,
-      message: "Please set HEDERA_ADDRESS_BOOK_FILEID environment variable with a valid address book."
+      message: "Please set HEDERA_DID environment variable with a valid HIP-27 identifier."
     };
   } else {
-    const identityNetwork = getIdentityNetwork();
+    const registeredDid = getDidDocument();
 
-    if (!identityNetwork) {
+    if (!registeredDid) {
       return {
         status: APPLICATION_STATUS.ERROR,
-        message: "Unable to load identity network, invalid fileId set in HEDERA_ADDRESS_BOOK_FILEID."
+        message: "Unable to resolve DID Document, invalid fileId set in HEDERA_DID."
       };
     } else {
       return {
