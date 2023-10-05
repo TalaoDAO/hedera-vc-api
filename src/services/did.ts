@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { PrivateKey, Client } = require("@hashgraph/sdk");
 
-import { HcsDid } from "@hashgraph/did-sdk-js";
+import { DidDocument, HcsDid } from "@hashgraph/did-sdk-js";
 import hederaClient from "./hedera";
+import { NotFoundError } from "../lib/errors";
 
 let didDocument: HcsDid;
 
@@ -18,7 +19,13 @@ export async function loadDidDocument(documentId: string) {
     client: hederaClient
   });
 
-  await didDocument.resolve();
+  const resolvedDocument = await didDocument.resolve();
+
+  if (!isValidDidDocument(resolvedDocument)) {
+    throw new NotFoundError(`Unable to resolve DID Document with id ${documentId}`);
+  }
+
+  return resolvedDocument;
 }
 
 export function createDidDocument(params: CreateDidParams) {
@@ -33,4 +40,8 @@ export function getDidDocument() {
 
 export function registerDidDocument() {
   return didDocument.register();
+}
+
+function isValidDidDocument(didDocument: DidDocument) {
+  return Boolean(didDocument.getVersionId());
 }

@@ -35,11 +35,20 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@digitalbazaar/ed25519-signature-2018": "^4.0.0",
+    "@digitalbazaar/ed25519-signature-2020": "^5.2.0",
+    "@digitalbazaar/ed25519-verification-key-2018": "^4.0.0",
+    "@digitalbazaar/ed25519-verification-key-2020": "^4.1.0",
+    "@digitalbazaar/vc": "^6.0.2",
     "@hashgraph/did-sdk-js": "git@github.com:Meeco/hedera-did-sdk-js.git",
     "@hashgraph/sdk": "^2.33.0",
+    "@transmute/verifiable-credentials": "^0.1.1",
+    "base58-universal": "^2.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
+    "jose": "^4.15.1",
+    "jsonld-signatures": "^11.2.1",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^5.1.1"
   },

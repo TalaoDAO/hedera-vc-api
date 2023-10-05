@@ -12,6 +12,7 @@ import { RegisterRoutes } from "../build/routes";
 import { loadDidDocument } from "./services/did";
 import { APPLICATION_STATUS, getApplicationStatus } from "./admin/admin";
 import { getEnvVar, hasEnvVar } from "./services/envVars";
+import { ClientError, NotFoundError } from "./lib/errors";
 
 const app = express();
 
@@ -66,30 +67,44 @@ async function initApp() {
   }
 
   RegisterRoutes(app);
+
+  /**
+   * Error handling
+   */
+  app.use(function errorHandler(err: unknown, req: Request, res: Response, next: NextFunction): Response | void {
+    if (err instanceof NotFoundError) {
+      console.warn(`Resource not found ${err.message}`);
+      return res.status(404).json({
+        message: err.message
+      });
+    }
+
+    if (err instanceof ClientError) {
+      console.warn(`Invalid input!`, err.message);
+      return res.status(400).json({
+        message: err.message
+      });
+    }
+
+    if (err instanceof ValidateError) {
+      console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
+      return res.status(422).json({
+        message: "Validation Failed",
+        details: err?.fields
+      });
+    }
+    if (err instanceof Error) {
+      console.error(err);
+      return res.status(500).json({
+        message: "Internal Server Error"
+      });
+    }
+
+    next();
+  });
 }
 
 initApp();
-
-/**
- * Error handling
- */
-app.use(function errorHandler(err: unknown, req: Request, res: Response, next: NextFunction): Response | void {
-  if (err instanceof ValidateError) {
-    console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
-    return res.status(422).json({
-      message: "Validation Failed",
-      details: err?.fields
-    });
-  }
-  if (err instanceof Error) {
-    console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error"
-    });
-  }
-
-  next();
-});
 
 /**
  * Server init

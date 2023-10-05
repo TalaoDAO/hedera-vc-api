@@ -14,6 +14,280 @@
 				],
 				"type": "string"
 			},
+			"JSONObject": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"$ref": "#/components/schemas/JSONValue"
+				}
+			},
+			"JSONArray": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"JSONValue": {
+				"anyOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "number",
+						"format": "double"
+					},
+					{
+						"type": "boolean"
+					},
+					{
+						"$ref": "#/components/schemas/JSONObject"
+					},
+					{
+						"$ref": "#/components/schemas/JSONArray"
+					}
+				]
+			},
+			"Credential": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JSONObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"issuer": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"properties": {
+									"id": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"id"
+								],
+								"type": "object"
+							}
+						]
+					},
+					"issuanceDate": {
+						"type": "string"
+					},
+					"expirationDate": {
+						"type": "string"
+					},
+					"credentialSubject": {
+						"$ref": "#/components/schemas/JSONObject"
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type",
+					"issuer",
+					"issuanceDate",
+					"credentialSubject"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialIssueOptions": {
+				"properties": {
+					"created": {
+						"type": "string"
+					},
+					"challenge": {
+						"type": "string"
+					},
+					"domain": {
+						"type": "string"
+					},
+					"credentialStatus": {
+						"properties": {
+							"type": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"type"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"created",
+					"challenge",
+					"domain",
+					"credentialStatus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialIssueParams": {
+				"properties": {
+					"credential": {
+						"$ref": "#/components/schemas/Credential"
+					},
+					"options": {
+						"$ref": "#/components/schemas/CredentialIssueOptions"
+					}
+				},
+				"required": [
+					"credential",
+					"options"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SignedVerifiableCredential": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JSONObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"issuer": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"properties": {
+									"id": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"id"
+								],
+								"type": "object"
+							}
+						]
+					},
+					"issuanceDate": {
+						"type": "string"
+					},
+					"expirationDate": {
+						"type": "string"
+					},
+					"credentialSubject": {
+						"$ref": "#/components/schemas/JSONObject"
+					},
+					"proof": {
+						"properties": {
+							"proofValue": {
+								"type": "string"
+							},
+							"jws": {
+								"type": "string"
+							},
+							"proofPurpose": {
+								"type": "string"
+							},
+							"verificationMethod": {
+								"type": "string"
+							},
+							"nonce": {
+								"type": "string"
+							},
+							"domain": {
+								"type": "string"
+							},
+							"challenge": {
+								"type": "string"
+							},
+							"created": {
+								"type": "string"
+							},
+							"type": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"jws",
+							"proofPurpose",
+							"verificationMethod",
+							"created",
+							"type"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type",
+					"issuer",
+					"issuanceDate",
+					"credentialSubject",
+					"proof"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialVerifyOptions": {
+				"properties": {
+					"challenge": {
+						"type": "string"
+					},
+					"domain": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialVerifyParams": {
+				"properties": {
+					"verifiableCredential": {
+						"$ref": "#/components/schemas/SignedVerifiableCredential"
+					},
+					"options": {
+						"$ref": "#/components/schemas/CredentialVerifyOptions"
+					}
+				},
+				"required": [
+					"verifiableCredential",
+					"options"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DidDocument": {
 				"type": "string"
 			}
@@ -82,6 +356,55 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/credentials/issue": {
+			"post": {
+				"operationId": "IssueCredential",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CredentialIssueParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/verify": {
+			"post": {
+				"operationId": "VerifyCredential",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CredentialVerifyParams"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/did": {
