@@ -59,7 +59,6 @@ services:
     environment:
       - HEDERA_ACCOUNT_ID=<x.y.z>
       - HEDERA_PRIVATE_KEY=<b8104000..4502f>
-      - HEDERA_ADDRESS_BOOK_FILEID=<x.y.z>
       - HEDERA_NETWORK=<testnet | mainnet>
       - HEDERA_DID=<decentralized identifier>
 ```
