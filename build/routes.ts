@@ -54,10 +54,10 @@ const models: TsoaRoute.Models = {
     "CredentialIssueOptions": {
         "dataType": "refObject",
         "properties": {
-            "created": {"dataType":"string","required":true},
-            "challenge": {"dataType":"string","required":true},
-            "domain": {"dataType":"string","required":true},
-            "credentialStatus": {"dataType":"nestedObjectLiteral","nestedProperties":{"type":{"dataType":"string","required":true}},"required":true},
+            "created": {"dataType":"string"},
+            "challenge": {"dataType":"string"},
+            "domain": {"dataType":"string"},
+            "credentialStatus": {"dataType":"nestedObjectLiteral","nestedProperties":{"type":{"dataType":"string","required":true}}},
         },
         "additionalProperties": false,
     },
@@ -66,7 +66,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "credential": {"ref":"Credential","required":true},
-            "options": {"ref":"CredentialIssueOptions","required":true},
+            "options": {"ref":"CredentialIssueOptions"},
         },
         "additionalProperties": false,
     },
@@ -99,7 +99,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "verifiableCredential": {"ref":"SignedVerifiableCredential","required":true},
-            "options": {"ref":"CredentialVerifyOptions","required":true},
+            "options": {"ref":"CredentialVerifyOptions"},
         },
         "additionalProperties": false,
     },

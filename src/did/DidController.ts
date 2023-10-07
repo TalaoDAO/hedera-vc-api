@@ -1,12 +1,11 @@
 import { Controller, Get, Route } from "tsoa";
-import { getDidDocument } from "../services/did";
+import { loadDidDocument } from "../services/did";
+import { getEnvVar } from "../services/envVars";
 
 @Route("did")
 export class DidController extends Controller {
   @Get("")
   public getDidDocument() {
-    const didDocument = getDidDocument();
-
-    return didDocument.resolve();
+    return loadDidDocument(getEnvVar("HEDERA_DID")!);
   }
 }

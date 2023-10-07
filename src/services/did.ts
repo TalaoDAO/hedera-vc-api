@@ -6,15 +6,13 @@ import { DidDocument, HcsDid } from "@hashgraph/did-sdk-js";
 import hederaClient from "./hedera";
 import { NotFoundError } from "../lib/errors";
 
-let didDocument: HcsDid;
-
 interface CreateDidParams {
   privateKey: typeof PrivateKey;
   client: typeof Client;
 }
 
 export async function loadDidDocument(documentId: string) {
-  didDocument = new HcsDid({
+  const didDocument = new HcsDid({
     identifier: documentId,
     client: hederaClient
   });
@@ -29,17 +27,11 @@ export async function loadDidDocument(documentId: string) {
 }
 
 export function createDidDocument(params: CreateDidParams) {
-  didDocument = new HcsDid(params);
-
-  return didDocument;
+  return new HcsDid(params);
 }
 
-export function getDidDocument() {
-  return didDocument;
-}
-
-export function registerDidDocument() {
-  return didDocument.register();
+export function registerDidDocument(document: HcsDid) {
+  return document.register();
 }
 
 function isValidDidDocument(didDocument: DidDocument) {

@@ -1,17 +1,21 @@
 import { loadDidDocument } from "./did";
 import { ClientError, NotFoundError } from "../lib/errors";
 import { JSONObject } from "../types/JSON";
+import { getEnvVar } from "./envVars";
+import { operatorKey } from "./hedera";
 
 async function importVcAndEd25518Suite() {
   const vc = await import("@digitalbazaar/vc");
 
   const { Ed25519VerificationKey2018 } = await import("@digitalbazaar/ed25519-verification-key-2018");
   const { Ed25519Signature2018 } = await import("@digitalbazaar/ed25519-signature-2018");
+  const base58btc = await import("base58-universal");
 
   return {
     vc,
     Ed25519Signature2018,
-    Ed25519VerificationKey2018
+    Ed25519VerificationKey2018,
+    base58btc
   };
 }
 
@@ -105,4 +109,27 @@ export async function verifyCredential(signedCredential: SignedVerifiableCredent
   } else {
     throw new ClientError("Invalid Input!");
   }
+}
+
+export async function issueCredential(credential: Credential) {
+  const didDocument = await loadDidDocument(getEnvVar("HEDERA_DID")!);
+
+  const { Ed25519VerificationKey2018, Ed25519Signature2018, vc, base58btc } = await importVcAndEd25518Suite();
+
+  const key = await Ed25519VerificationKey2018.from({
+    type: "Ed25519VerificationKey2018",
+    controller: didDocument.getId(),
+    id: didDocument.getId(),
+    publicKeyBase58: base58btc.encode(operatorKey.publicKey.toBytes()),
+    privateKeyBase58: base58btc.encode(operatorKey._key._key._keyPair.secretKey)
+  });
+
+  const suite = new Ed25519Signature2018({
+    key
+  });
+
+  return vc.issue({
+    credential,
+    suite
+  });
 }

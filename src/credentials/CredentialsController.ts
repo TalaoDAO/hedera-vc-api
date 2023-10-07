@@ -1,19 +1,21 @@
 import { Body, Controller, Post, Route } from "tsoa";
 
-import { Credential, SignedVerifiableCredential, verifyCredential } from "../services/credential";
+import { Credential, SignedVerifiableCredential, verifyCredential, issueCredential } from "../services/credential";
+import { APPLICATION_STATUS, getApplicationStatus } from "../admin/admin";
+import { ClientError } from "../lib/errors";
 
 interface CredentialIssueOptions {
-  created: string;
-  challenge: string;
-  domain: string;
-  credentialStatus: {
+  created?: string;
+  challenge?: string;
+  domain?: string;
+  credentialStatus?: {
     type: string;
   };
 }
 
 interface CredentialIssueParams {
   credential: Credential;
-  options: CredentialIssueOptions;
+  options?: CredentialIssueOptions;
 }
 
 interface CredentialVerifyOptions {
@@ -23,14 +25,22 @@ interface CredentialVerifyOptions {
 
 interface CredentialVerifyParams {
   verifiableCredential: SignedVerifiableCredential;
-  options: CredentialVerifyOptions;
+  options?: CredentialVerifyOptions;
 }
 
 @Route("credentials")
 export class CredentialsController extends Controller {
   @Post("issue")
   public async issueCredential(@Body() { credential }: CredentialIssueParams) {
-    credential;
+    const status = await getApplicationStatus();
+
+    if (status.status !== APPLICATION_STATUS.OK) {
+      throw new ClientError("Application isn't initialized as an Issuer");
+    } else {
+      return {
+        verifiableCredential: await issueCredential(credential)
+      };
+    }
   }
 
   @Post("verify")

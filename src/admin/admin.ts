@@ -1,7 +1,7 @@
 import hederaClient from "../services/hedera";
-import { hasEnvVar } from "../services/envVars";
+import { getEnvVar, hasEnvVar } from "../services/envVars";
 import { operatorKey } from "../services/hedera";
-import { createDidDocument, getDidDocument, registerDidDocument } from "../services/did";
+import { createDidDocument, loadDidDocument, registerDidDocument } from "../services/did";
 
 export const enum APPLICATION_STATUS {
   INITIALIZING = "INITIALIZING",
@@ -11,23 +11,23 @@ export const enum APPLICATION_STATUS {
 
 export function initApplication() {
   console.log(`Creating DidDocument...`);
-  createDidDocument({
+  const newDidDocument = createDidDocument({
     privateKey: operatorKey,
     client: hederaClient
   });
 
   console.log(`Publishing DidDocument...`);
-  return registerDidDocument();
+  return registerDidDocument(newDidDocument);
 }
 
-export function getApplicationStatus() {
+export async function getApplicationStatus() {
   if (!hasEnvVar("HEDERA_DID")) {
     return {
       status: APPLICATION_STATUS.INITIALIZING,
       message: "Please set HEDERA_DID environment variable with a valid HIP-27 identifier."
     };
   } else {
-    const registeredDid = getDidDocument();
+    const registeredDid = await loadDidDocument(getEnvVar("HEDERA_DID")!)!;
 
     if (!registeredDid) {
       return {

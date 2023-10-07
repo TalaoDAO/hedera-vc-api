@@ -132,12 +132,6 @@
 						"type": "object"
 					}
 				},
-				"required": [
-					"created",
-					"challenge",
-					"domain",
-					"credentialStatus"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -151,8 +145,7 @@
 					}
 				},
 				"required": [
-					"credential",
-					"options"
+					"credential"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -282,8 +275,7 @@
 					}
 				},
 				"required": [
-					"verifiableCredential",
-					"options"
+					"verifiableCredential"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -362,8 +354,21 @@
 			"post": {
 				"operationId": "IssueCredential",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"verifiableCredential": {}
+									},
+									"required": [
+										"verifiableCredential"
+									],
+									"type": "object"
+								}
+							}
+						}
 					}
 				},
 				"security": [],
@@ -388,7 +393,28 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"errors": {
+											"items": {},
+											"type": "array"
+										},
+										"warnings": {
+											"items": {},
+											"type": "array"
+										},
+										"checks": {
+											"items": {},
+											"type": "array"
+										}
+									},
+									"required": [
+										"errors",
+										"warnings",
+										"checks"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}

@@ -54,7 +54,7 @@ async function initApp() {
     await loadDidDocument(getEnvVar("HEDERA_DID")!);
   }
 
-  const applicationStatus = getApplicationStatus();
+  const applicationStatus = await getApplicationStatus();
 
   if (applicationStatus.status === APPLICATION_STATUS.INITIALIZING) {
     console.warn(
