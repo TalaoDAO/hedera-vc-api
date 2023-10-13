@@ -46,6 +46,42 @@
 					}
 				]
 			},
+			"CredentialStatus": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"StatusList2021Entry"
+						],
+						"nullable": false
+					},
+					"statusPurpose": {
+						"type": "string",
+						"enum": [
+							"revocation",
+							"suspension"
+						]
+					},
+					"statusListIndex": {
+						"type": "string"
+					},
+					"statusListCredential": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"type",
+					"statusPurpose",
+					"statusListIndex",
+					"statusListCredential"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Credential": {
 				"properties": {
 					"@context": {
@@ -96,6 +132,9 @@
 					},
 					"credentialSubject": {
 						"$ref": "#/components/schemas/JSONObject"
+					},
+					"credentialStatus": {
+						"$ref": "#/components/schemas/CredentialStatus"
 					}
 				},
 				"required": [
@@ -121,15 +160,7 @@
 						"type": "string"
 					},
 					"credentialStatus": {
-						"properties": {
-							"type": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"type"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/CredentialStatus"
 					}
 				},
 				"type": "object",
@@ -201,6 +232,9 @@
 					"credentialSubject": {
 						"$ref": "#/components/schemas/JSONObject"
 					},
+					"credentialStatus": {
+						"$ref": "#/components/schemas/CredentialStatus"
+					},
 					"proof": {
 						"properties": {
 							"proofValue": {
@@ -260,6 +294,21 @@
 					},
 					"domain": {
 						"type": "string"
+					},
+					"credentialStatus": {
+						"properties": {
+							"type": {
+								"type": "string",
+								"enum": [
+									"StatusList2021Entry"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"type"
+						],
+						"type": "object"
 					}
 				},
 				"type": "object",
@@ -309,7 +358,19 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"properties": {
+										"statusListFileId": {
+											"type": "string"
+										},
+										"didDocument": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"statusListFileId",
+										"didDocument"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -431,6 +492,33 @@
 						}
 					}
 				}
+			}
+		},
+		"/credentials/status/{statusListId}": {
+			"get": {
+				"operationId": "GetStatusList",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "statusListId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/did": {

@@ -6,11 +6,15 @@ import { getApplicationStatus, initApplication } from "./admin";
 export class AdminController extends Controller {
   @Post("init")
   public async createIdentityNetwork() {
-    const didDocument = await initApplication();
+    const { didDocument, statusListFileId } = await initApplication();
 
     console.log(`DID Document published ${didDocument.getIdentifier()}`);
+    console.log(`Status List Created ${statusListFileId}`);
 
-    return String(didDocument.getIdentifier());
+    return {
+      didDocument: String(didDocument.getIdentifier()),
+      statusListFileId: String(statusListFileId)
+    };
   }
 
   @Get("status")

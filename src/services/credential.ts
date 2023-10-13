@@ -1,23 +1,13 @@
+import axios from "axios";
+
 import { loadDidDocument } from "./did";
 import { ClientError, NotFoundError } from "../lib/errors";
 import { JSONObject } from "../types/JSON";
 import { getEnvVar } from "./envVars";
 import { operatorKey } from "./hedera";
-
-async function importVcAndEd25518Suite() {
-  const vc = await import("@digitalbazaar/vc");
-
-  const { Ed25519VerificationKey2018 } = await import("@digitalbazaar/ed25519-verification-key-2018");
-  const { Ed25519Signature2018 } = await import("@digitalbazaar/ed25519-signature-2018");
-  const base58btc = await import("base58-universal");
-
-  return {
-    vc,
-    Ed25519Signature2018,
-    Ed25519VerificationKey2018,
-    base58btc
-  };
-}
+import { importVcAndEd25518Suite } from "../lib/nonEsModules";
+import { checkCredentialStatus } from "./statusList";
+import contexts from "../lib/contexts";
 
 export interface Credential {
   "@context": (string | JSONObject)[];
@@ -27,9 +17,19 @@ export interface Credential {
   issuanceDate: string;
   expirationDate?: string;
   credentialSubject: JSONObject;
+  credentialStatus?: CredentialStatus;
+}
+
+export interface CredentialStatus {
+  id: string;
+  type: "StatusList2021Entry";
+  statusPurpose: "revocation" | "suspension";
+  statusListIndex: string;
+  statusListCredential: string;
 }
 
 export interface SignedVerifiableCredential extends Credential {
+  credentialStatus?: CredentialStatus;
   proof: {
     type: string;
     created: string;
@@ -75,9 +75,10 @@ export async function verifyCredential(signedCredential: SignedVerifiableCredent
 
   const { vc } = await importVcAndEd25518Suite();
 
-  const verification = await vc.verifyCredential({
+  const isCredentialVerified = await vc.verifyCredential({
     credential: signedCredential,
     suite: verificationSuite,
+    checkStatus: checkCredentialStatus,
     documentLoader: async (url: string) => {
       if (url.startsWith("did:hedera")) {
         return {
@@ -96,13 +97,28 @@ export async function verifyCredential(signedCredential: SignedVerifiableCredent
           }
         };
       }
+
+      if (url.startsWith("http://localhost:3001/")) {
+        const { data: document } = await axios.get(url);
+
+        return {
+          document
+        };
+      }
+
+      if (contexts.has(url)) {
+        return {
+          document: contexts.get(url)
+        };
+      }
+
       return vc.defaultDocumentLoader(url);
     }
   });
 
-  if (verification.verified) {
+  if (isCredentialVerified.verified) {
     return {
-      checks: [verification.results.map((verif: JSONObject) => JSON.stringify(verif))],
+      checks: [],
       warnings: [],
       errors: []
     };
@@ -130,6 +146,15 @@ export async function issueCredential(credential: Credential) {
 
   return vc.issue({
     credential,
-    suite
+    suite,
+    documentLoader: (url: string) => {
+      if (contexts.has(url)) {
+        return {
+          document: contexts.get(url)
+        };
+      }
+
+      return vc.defaultDocumentLoader(url);
+    }
   });
 }

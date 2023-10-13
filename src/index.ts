@@ -58,7 +58,7 @@ async function initApp() {
 
   if (applicationStatus.status === APPLICATION_STATUS.INITIALIZING) {
     console.warn(
-      `Warning: application is running in INITIALIZING mode. Please initialize it and restart after setting the HEDERA_DID environment variable`
+      `Warning: application is running in INITIALIZING mode. Please initialize it and restart after setting the HEDERA_DID and STATUS_LIST_FILE_ID environment variables`
     );
   }
 

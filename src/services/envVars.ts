@@ -1,5 +1,5 @@
 const requiredEnvVars = ["HEDERA_ACCOUNT_ID", "HEDERA_PRIVATE_KEY", "HEDERA_NETWORK"] as const;
-const optionalEnvVars = ["HEDERA_DID"] as const;
+const optionalEnvVars = ["HEDERA_DID", "STATUS_LIST_FILE_ID", "ISSUER_SERVER_URL"] as const;
 
 type EnvVars = { [key in (typeof requiredEnvVars)[number]]: string } & {
   [key in (typeof optionalEnvVars)[number]]: string;

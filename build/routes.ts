@@ -37,6 +37,18 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"},{"dataType":"boolean"},{"ref":"JSONObject"},{"ref":"JSONArray"}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialStatus": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"enum","enums":["StatusList2021Entry"],"required":true},
+            "statusPurpose": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["revocation"]},{"dataType":"enum","enums":["suspension"]}],"required":true},
+            "statusListIndex": {"dataType":"string","required":true},
+            "statusListCredential": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Credential": {
         "dataType": "refObject",
         "properties": {
@@ -47,6 +59,7 @@ const models: TsoaRoute.Models = {
             "issuanceDate": {"dataType":"string","required":true},
             "expirationDate": {"dataType":"string"},
             "credentialSubject": {"ref":"JSONObject","required":true},
+            "credentialStatus": {"ref":"CredentialStatus"},
         },
         "additionalProperties": false,
     },
@@ -57,7 +70,7 @@ const models: TsoaRoute.Models = {
             "created": {"dataType":"string"},
             "challenge": {"dataType":"string"},
             "domain": {"dataType":"string"},
-            "credentialStatus": {"dataType":"nestedObjectLiteral","nestedProperties":{"type":{"dataType":"string","required":true}}},
+            "credentialStatus": {"ref":"CredentialStatus"},
         },
         "additionalProperties": false,
     },
@@ -81,6 +94,7 @@ const models: TsoaRoute.Models = {
             "issuanceDate": {"dataType":"string","required":true},
             "expirationDate": {"dataType":"string"},
             "credentialSubject": {"ref":"JSONObject","required":true},
+            "credentialStatus": {"ref":"CredentialStatus"},
             "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"proofValue":{"dataType":"string"},"jws":{"dataType":"string","required":true},"proofPurpose":{"dataType":"string","required":true},"verificationMethod":{"dataType":"string","required":true},"nonce":{"dataType":"string"},"domain":{"dataType":"string"},"challenge":{"dataType":"string"},"created":{"dataType":"string","required":true},"type":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": false,
@@ -91,6 +105,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "challenge": {"dataType":"string"},
             "domain": {"dataType":"string"},
+            "credentialStatus": {"dataType":"nestedObjectLiteral","nestedProperties":{"type":{"dataType":"enum","enums":["StatusList2021Entry"],"required":true}}},
         },
         "additionalProperties": false,
     },
@@ -211,6 +226,31 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.verifyCredential.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/credentials/status/:statusListId',
+            ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
+            ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.getStatusList)),
+
+            function CredentialsController_getStatusList(request: any, response: any, next: any) {
+            const args = {
+                    statusListId: {"in":"path","name":"statusListId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CredentialsController();
+
+
+              const promise = controller.getStatusList.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

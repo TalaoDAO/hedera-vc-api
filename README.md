@@ -22,6 +22,7 @@ HEDERA_PRIVATE_KEY=<encoded private key>
 
 # Run on testnet
 HEDERA_NETWORK=testnet
+```
 
 Then 
 
@@ -32,13 +33,15 @@ npm run dev
 You should see that you're running in "INITIALIZING" mode. This means that the app is not yet ready to issue VCs for instance.
 You'll first have to setup an address book.
 
-## Generating a DID Document
+## For Issuers: Generating a DID Document and a Status List
 
 1. Navigate to `localhost:3000/docs`
 2. Expand the `POST /admin/init` method. 
 3. Click "try it out" and Execute
-4. Upon execution, copy the document identifier `did:hedera:098sd0fs8d90fg..._0.0.12345`
-6. set a new `HEDERA_DID` environment variable with the value
+4. Upon execution, copy the document identifier `did:hedera:098sd0fs8d90fg..._0.0.12345` and the Status List file Id `0.0.45678`
+6. set a new `HEDERA_DID` environment variable with the document identifier
+7. set a new `STATUS_LIST_FILE_ID` environment variable with the Status List file id
+8. set the `ISSUER_SERVER_URL` environment variables with the url to the server. This will show in the StatusList credential so verifiers which url to hit to retrieve the verification list. Set it to `http://localhost:3001` if running locally.
 7. Restart the app with the environment variable set, you should now be in "OK" mode. You can check it with the `GET /admin/status` method.
 
 ## Docker
@@ -52,7 +55,7 @@ version: "3.6"
 
 services:
   hedera-vc-api:
-    image: meranti/hedera-vc-api:alpha-1
+    image: meranti/hedera-vc-api:alpha-4
     ports:
       - "3000:3000"
     restart: always
@@ -60,7 +63,9 @@ services:
       - HEDERA_ACCOUNT_ID=<x.y.z>
       - HEDERA_PRIVATE_KEY=<b8104000..4502f>
       - HEDERA_NETWORK=<testnet | mainnet>
-      - HEDERA_DID=<decentralized identifier>
+      - HEDERA_DID=<decentralized identifier if you want to setup the server as Issuer>
+      - STATUS_LIST_FILE_ID=<status list file id if you want to setup the server as Issuer>
+      - ISSUER_SERVER_URL=youserver.com # this url will show in the status list credential so verifiers know where to find the status 
 ```
 
 ## Literature
