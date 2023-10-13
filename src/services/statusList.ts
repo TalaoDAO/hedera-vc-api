@@ -101,8 +101,8 @@ export async function ensureHfsStatusListForCredential(credentialStatus: Credent
     throw new ClientError("Invalid status list id");
   }
 
-  if (index > 99999) {
-    throw new ClientError("statusListIndex should be between 0 and 99999");
+  if (index >= STATUS_LIST_LENGTH) {
+    throw new ClientError(`statusListIndex should be between 0 and ${STATUS_LIST_LENGTH - 1}`);
   }
 
   const statusListFiledId = getEnvVar("STATUS_LIST_FILE_ID")!;

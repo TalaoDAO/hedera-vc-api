@@ -126,7 +126,7 @@ export class CredentialsController extends Controller {
     const id = Number(credentialId);
 
     if (id >= STATUS_LIST_LENGTH) {
-      throw new ClientError(`credential Id ${id} out of bounds, should be between 0 and 99999`);
+      throw new ClientError(`credential Id ${id} out of bounds, should be between 0 and ${STATUS_LIST_LENGTH - 1}`);
     }
 
     if (!statusList[statusListId]) {
