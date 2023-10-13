@@ -329,6 +329,45 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UpdateCredentialStatusParams": {
+				"properties": {
+					"credentialId": {
+						"type": "string"
+					},
+					"credentialStatus": {
+						"items": {
+							"properties": {
+								"status": {
+									"type": "string",
+									"enum": [
+										"true",
+										"false"
+									]
+								},
+								"type": {
+									"type": "string",
+									"enum": [
+										"revocation"
+									],
+									"nullable": false
+								}
+							},
+							"required": [
+								"status",
+								"type"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"credentialId",
+					"credentialStatus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DidDocument": {
 				"type": "string"
 			}
@@ -519,6 +558,36 @@
 						}
 					}
 				]
+			},
+			"post": {
+				"operationId": "SetStatusList",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "statusListId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCredentialStatusParams"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/did": {

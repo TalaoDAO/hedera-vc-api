@@ -119,6 +119,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateCredentialStatusParams": {
+        "dataType": "refObject",
+        "properties": {
+            "credentialId": {"dataType":"string","required":true},
+            "credentialStatus": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["true"]},{"dataType":"enum","enums":["false"]}],"required":true},"type":{"dataType":"enum","enums":["revocation"],"required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DidDocument": {
         "dataType": "refAlias",
         "type": {"dataType":"string","validators":{}},
@@ -251,6 +260,32 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getStatusList.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/credentials/status/:statusListId',
+            ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
+            ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.setStatusList)),
+
+            function CredentialsController_setStatusList(request: any, response: any, next: any) {
+            const args = {
+                    statusListId: {"in":"path","name":"statusListId","required":true,"dataType":"double"},
+                    undefined: {"in":"body","required":true,"ref":"UpdateCredentialStatusParams"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CredentialsController();
+
+
+              const promise = controller.setStatusList.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

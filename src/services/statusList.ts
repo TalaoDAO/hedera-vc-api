@@ -9,6 +9,7 @@ import { CredentialStatus, SignedVerifiableCredential } from "./credential";
 import { ClientError } from "../lib/errors";
 import contexts from "../lib/contexts";
 import { JSONObject } from "../types/JSON";
+import { STATUS_LIST_LENGTH } from "./constants";
 
 export interface StatusList2021Credential {
   "@context": string[];
@@ -32,7 +33,7 @@ export interface StatusList2021Credential {
 }
 
 export interface StatusList {
-  encode: () => string;
+  encode: () => Promise<string>;
   decode: (encodedStatusList: string) => StatusList;
   setStatus: (index: number, isRevoked: boolean) => void;
 }
@@ -42,7 +43,7 @@ export async function createStatusList(length: number): Promise<StatusList> {
   return statusList.createList({ length });
 }
 
-export function encodeStatusList(statusList: StatusList) {
+export function encodeStatusList(statusList: StatusList): Promise<string> {
   return statusList.encode();
 }
 
@@ -52,7 +53,7 @@ export function revokeIndex(statusList: StatusList, index: number) {
   return statusList;
 }
 
-export async function decodeStatusList(encodedList: string): Promise<StatusList> {
+export async function decodeStatusList(encodedList: string) {
   const statusList = await loadStatusList();
 
   return statusList.decodeList({ encodedList });
@@ -109,7 +110,7 @@ export async function ensureHfsStatusListForCredential(credentialStatus: Credent
   const statusList = await hfsGetStatusList(statusListFiledId);
 
   if (typeof statusList[statusListId] !== "string") {
-    statusList[statusListId] = await encodeStatusList(await createStatusList(100000));
+    statusList[statusListId] = await encodeStatusList(await createStatusList(STATUS_LIST_LENGTH));
     await hfsUpdateStatusList(statusListFiledId, statusList);
   }
 }

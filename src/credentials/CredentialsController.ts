@@ -10,7 +10,15 @@ import {
 import { APPLICATION_STATUS, getApplicationStatus } from "../admin/admin";
 import { ClientError, NotFoundError } from "../lib/errors";
 import { getEnvVar } from "../services/envVars";
-import { ensureHfsStatusListForCredential, hfsGetStatusList, issueStatusListCredential } from "../services/statusList";
+import {
+  decodeStatusList,
+  encodeStatusList,
+  ensureHfsStatusListForCredential,
+  hfsGetStatusList,
+  hfsUpdateStatusList,
+  issueStatusListCredential
+} from "../services/statusList";
+import { STATUS_LIST_LENGTH } from "../services/constants";
 
 interface CredentialIssueOptions {
   created?: string;
@@ -35,6 +43,14 @@ interface CredentialVerifyOptions {
 interface CredentialVerifyParams {
   verifiableCredential: SignedVerifiableCredential;
   options?: CredentialVerifyOptions;
+}
+
+interface UpdateCredentialStatusParams {
+  credentialId: string;
+  credentialStatus: {
+    type: "revocation";
+    status: "true" | "false";
+  }[];
 }
 
 @Route("credentials")
@@ -76,7 +92,7 @@ export class CredentialsController extends Controller {
     if (!issuerServerName) {
       throw new Error(`Unable to issue Status List credential, ISSUER_SERVER_URL isn't set.`);
     }
-    
+
     const statusList = await hfsGetStatusList(getEnvVar("STATUS_LIST_FILE_ID")!);
 
     if (!statusList[statusListId]) {
@@ -98,5 +114,32 @@ export class CredentialsController extends Controller {
     });
 
     return credential;
+  }
+
+  @Post("status/{statusListId}")
+  public async setStatusList(
+    @Path() statusListId: number,
+    @Body() { credentialId, credentialStatus }: UpdateCredentialStatusParams
+  ) {
+    const statusList = await hfsGetStatusList(getEnvVar("STATUS_LIST_FILE_ID")!);
+
+    const id = Number(credentialId);
+
+    if (id >= STATUS_LIST_LENGTH) {
+      throw new ClientError(`credential Id ${id} out of bounds, should be between 0 and 99999`);
+    }
+
+    if (!statusList[statusListId]) {
+      throw new NotFoundError(`statusListId with id ${statusListId} not found.`);
+    }
+
+    const revokedStatus = credentialStatus.find(({ type }) => type === "revocation");
+
+    if (revokedStatus && revokedStatus.status === "true") {
+      const decodedStatusList = await decodeStatusList(statusList[statusListId]);
+      decodedStatusList.setStatus(id, true);
+      statusList[statusListId] = await encodeStatusList(decodedStatusList);
+      await hfsUpdateStatusList(getEnvVar("STATUS_LIST_FILE_ID")!, statusList);
+    }
   }
 }
