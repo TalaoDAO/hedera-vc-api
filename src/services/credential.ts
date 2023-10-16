@@ -1,13 +1,14 @@
 import axios from "axios";
 
 import { loadDidDocument } from "./did";
-import { ClientError, NotFoundError } from "../lib/errors";
+import { ClientError } from "../lib/errors";
 import { JSONObject } from "../types/JSON";
 import { getEnvVar } from "./envVars";
 import { operatorKey } from "./hedera";
 import { importVcAndEd25518Suite } from "../lib/nonEsModules";
 import { checkCredentialStatus } from "./statusList";
 import contexts from "../lib/contexts";
+import { createVerificationSuite } from "./verificationSuite";
 
 export interface Credential {
   "@context": (string | JSONObject)[];
@@ -43,31 +44,6 @@ export interface SignedVerifiableCredential extends Credential {
   };
 }
 
-async function createVerificationSuite(didIdentifier: string) {
-  let resolvedDid;
-
-  try {
-    resolvedDid = await loadDidDocument(didIdentifier);
-  } catch (e) {
-    if (e instanceof NotFoundError) {
-      throw new ClientError(`Invalid proof, no DID Document with id ${didIdentifier}`);
-    }
-  }
-
-  const { Ed25519VerificationKey2018, Ed25519Signature2018 } = await importVcAndEd25518Suite();
-
-  const key = await Ed25519VerificationKey2018.from({
-    type: "Ed25519VerificationKey2018",
-    controller: resolvedDid?.getId(),
-    id: resolvedDid?.getId(),
-    publicKeyBase58: resolvedDid?.toJsonTree().verificationMethod[0].publicKeyBase58
-  });
-
-  return new Ed25519Signature2018({
-    key
-  });
-}
-
 export async function verifyCredential(signedCredential: SignedVerifiableCredential) {
   const id = signedCredential.proof.verificationMethod;
 
@@ -98,7 +74,7 @@ export async function verifyCredential(signedCredential: SignedVerifiableCredent
         };
       }
 
-      if (url.startsWith("http://localhost:3001/")) {
+      if (url.startsWith(getEnvVar("ISSUER_SERVER_URL")!)) {
         const { data: document } = await axios.get(url);
 
         return {

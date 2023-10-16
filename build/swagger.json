@@ -370,6 +370,181 @@
 			},
 			"DidDocument": {
 				"type": "string"
+			},
+			"SignedPresentation": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JSONObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"holder": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/components/schemas/JSONObject"
+							}
+						]
+					},
+					"verifiableCredential": {
+						"items": {
+							"$ref": "#/components/schemas/SignedVerifiableCredential"
+						},
+						"type": "array"
+					},
+					"proof": {
+						"properties": {
+							"jws": {
+								"type": "string"
+							},
+							"verificationMethod": {
+								"type": "string"
+							},
+							"proofPurpose": {
+								"type": "string"
+							},
+							"challenge": {
+								"type": "string"
+							},
+							"created": {
+								"type": "string"
+							},
+							"type": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"jws",
+							"verificationMethod",
+							"proofPurpose",
+							"created",
+							"type"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type",
+					"holder",
+					"verifiableCredential",
+					"proof"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Presentation": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JSONObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"holder": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/components/schemas/JSONObject"
+							}
+						]
+					},
+					"verifiableCredential": {
+						"items": {
+							"$ref": "#/components/schemas/SignedVerifiableCredential"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type",
+					"holder",
+					"verifiableCredential"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProvePresentationParams": {
+				"properties": {
+					"presentation": {
+						"$ref": "#/components/schemas/Presentation"
+					},
+					"options": {
+						"properties": {
+							"challenge": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"required": [
+					"presentation",
+					"options"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"VerifyPresentationParams": {
+				"properties": {
+					"verifiablePresentation": {
+						"$ref": "#/components/schemas/SignedPresentation"
+					},
+					"options": {
+						"properties": {
+							"challenge": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"required": [
+					"verifiablePresentation",
+					"options"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -607,6 +782,83 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/presentations/prove": {
+			"post": {
+				"operationId": "ProvePresentation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SignedPresentation"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProvePresentationParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/presentations/verify": {
+			"post": {
+				"operationId": "VerifyPresentation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"errors": {
+											"items": {},
+											"type": "array"
+										},
+										"warnings": {
+											"items": {},
+											"type": "array"
+										},
+										"checks": {
+											"items": {},
+											"type": "array"
+										}
+									},
+									"required": [
+										"errors",
+										"warnings",
+										"checks"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/VerifyPresentationParams"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

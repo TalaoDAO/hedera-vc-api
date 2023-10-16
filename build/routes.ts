@@ -8,6 +8,8 @@ import { AdminController } from './../src/admin/AdminController';
 import { CredentialsController } from './../src/credentials/CredentialsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DidController } from './../src/did/DidController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PresentationsController } from './../src/presentations/PresentationsController';
 import type { RequestHandler, Router } from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -131,6 +133,49 @@ const models: TsoaRoute.Models = {
     "DidDocument": {
         "dataType": "refAlias",
         "type": {"dataType":"string","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SignedPresentation": {
+        "dataType": "refObject",
+        "properties": {
+            "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "holder": {"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}],"required":true},
+            "verifiableCredential": {"dataType":"array","array":{"dataType":"refObject","ref":"SignedVerifiableCredential"},"required":true},
+            "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"jws":{"dataType":"string","required":true},"verificationMethod":{"dataType":"string","required":true},"proofPurpose":{"dataType":"string","required":true},"challenge":{"dataType":"string"},"created":{"dataType":"string","required":true},"type":{"dataType":"string","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Presentation": {
+        "dataType": "refObject",
+        "properties": {
+            "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "holder": {"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}],"required":true},
+            "verifiableCredential": {"dataType":"array","array":{"dataType":"refObject","ref":"SignedVerifiableCredential"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProvePresentationParams": {
+        "dataType": "refObject",
+        "properties": {
+            "presentation": {"ref":"Presentation","required":true},
+            "options": {"dataType":"nestedObjectLiteral","nestedProperties":{"challenge":{"dataType":"string"}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "VerifyPresentationParams": {
+        "dataType": "refObject",
+        "properties": {
+            "verifiablePresentation": {"ref":"SignedPresentation","required":true},
+            "options": {"dataType":"nestedObjectLiteral","nestedProperties":{"challenge":{"dataType":"string"}},"required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -310,6 +355,56 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getDidDocument.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/presentations/prove',
+            ...(fetchMiddlewares<RequestHandler>(PresentationsController)),
+            ...(fetchMiddlewares<RequestHandler>(PresentationsController.prototype.provePresentation)),
+
+            function PresentationsController_provePresentation(request: any, response: any, next: any) {
+            const args = {
+                    undefined: {"in":"body","required":true,"ref":"ProvePresentationParams"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new PresentationsController();
+
+
+              const promise = controller.provePresentation.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/presentations/verify',
+            ...(fetchMiddlewares<RequestHandler>(PresentationsController)),
+            ...(fetchMiddlewares<RequestHandler>(PresentationsController.prototype.verifyPresentation)),
+
+            function PresentationsController_verifyPresentation(request: any, response: any, next: any) {
+            const args = {
+                    undefined: {"in":"body","required":true,"ref":"VerifyPresentationParams"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new PresentationsController();
+
+
+              const promise = controller.verifyPresentation.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
