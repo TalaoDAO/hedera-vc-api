@@ -115,7 +115,9 @@ export async function ensureHfsStatusListForCredential(credentialStatus: Credent
   }
 }
 
-export async function issueStatusListCredential(credential: StatusList2021Credential) {
+export async function issueStatusListCredential(
+  credential: StatusList2021Credential
+): Promise<StatusList2021Credential> {
   const didDocument = await loadDidDocument(getEnvVar("HEDERA_DID")!);
 
   const { Ed25519VerificationKey2018, Ed25519Signature2018, vc, base58btc } = await importVcAndEd25518Suite();

@@ -341,6 +341,107 @@
 				"type": "object",
 				"additionalProperties": true
 			},
+			"StatusList2021Credential": {
+				"properties": {
+					"@context": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"issuer": {
+						"type": "string"
+					},
+					"issuanceDate": {
+						"type": "string"
+					},
+					"credentialSubject": {
+						"properties": {
+							"encodedList": {
+								"type": "string"
+							},
+							"statusPurpose": {
+								"type": "string",
+								"enum": [
+									"revocation"
+								],
+								"nullable": false
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"StatusList2021"
+								],
+								"nullable": false
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"encodedList",
+							"statusPurpose",
+							"type",
+							"id"
+						],
+						"type": "object"
+					},
+					"proof": {
+						"properties": {
+							"jws": {
+								"type": "string"
+							},
+							"proofPurpose": {
+								"type": "string",
+								"enum": [
+									"assertionMethod"
+								],
+								"nullable": false
+							},
+							"verificationMethod": {
+								"type": "string"
+							},
+							"created": {
+								"type": "string"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"Ed25519Signature2018"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"jws",
+							"proofPurpose",
+							"verificationMethod",
+							"created",
+							"type"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type",
+					"issuer",
+					"issuanceDate",
+					"credentialSubject"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
 			"UpdateCredentialStatusParams": {
 				"properties": {
 					"credentialId": {
@@ -726,7 +827,9 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/StatusList2021Credential"
+								}
 							}
 						}
 					}

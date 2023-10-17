@@ -106,7 +106,7 @@ export async function verifyCredential(signedCredential: SignedVerifiableCredent
   }
 }
 
-export async function issueCredential(credential: Credential) {
+export async function issueCredential(credential: Credential): Promise<SignedVerifiableCredential> {
   const didDocument = await loadDidDocument(getEnvVar("HEDERA_DID")!);
 
   const { Ed25519VerificationKey2018, Ed25519Signature2018, vc, base58btc } = await importVcAndEd25518Suite();

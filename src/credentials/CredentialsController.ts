@@ -107,7 +107,7 @@ export class CredentialsController extends Controller {
       throw new NotFoundError(`Unable to find status list with id ${statusListId}`);
     }
 
-    const credential = await issueStatusListCredential({
+    return issueStatusListCredential({
       "@context": ["https://www.w3.org/2018/credentials/v1", "https://w3id.org/vc/status-list/2021/v1"],
       id: `${issuerServerName}/credentials/status/${statusListId}`,
       type: ["VerifiableCredential", "StatusList2021Credential"],
@@ -120,8 +120,6 @@ export class CredentialsController extends Controller {
         encodedList: statusList[statusListId]
       }
     });
-
-    return credential;
   }
 
   @Post("status/{statusListId}")

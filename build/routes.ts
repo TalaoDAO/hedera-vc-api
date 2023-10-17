@@ -121,6 +121,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StatusList2021Credential": {
+        "dataType": "refObject",
+        "properties": {
+            "@context": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "issuer": {"dataType":"string","required":true},
+            "issuanceDate": {"dataType":"string","required":true},
+            "credentialSubject": {"dataType":"nestedObjectLiteral","nestedProperties":{"encodedList":{"dataType":"string","required":true},"statusPurpose":{"dataType":"enum","enums":["revocation"],"required":true},"type":{"dataType":"enum","enums":["StatusList2021"],"required":true},"id":{"dataType":"string","required":true}},"required":true},
+            "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"jws":{"dataType":"string","required":true},"proofPurpose":{"dataType":"enum","enums":["assertionMethod"],"required":true},"verificationMethod":{"dataType":"string","required":true},"created":{"dataType":"string","required":true},"type":{"dataType":"enum","enums":["Ed25519Signature2018"],"required":true}}},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateCredentialStatusParams": {
         "dataType": "refObject",
         "properties": {
