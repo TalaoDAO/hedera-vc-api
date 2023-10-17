@@ -19,12 +19,15 @@ Features it supports:
 npm install
 ```
 
-## Run
+## Run as a Verifier (default mode)
+
+By default, starting a Hedera VC API with an Hedera account will start the app as a Verifier app.
+The minimum set of required environment variables is as follows:
 
 First, setup a .env file with the following:
 
 ```.env
-# Optionaly run on a different port
+# Optionaly run on a different port than 3000
 PORT=3001
 
 # Your Hedera account
@@ -41,12 +44,18 @@ Then
 npm run dev
 ```
 
-You should see that you're running in "INITIALIZING" mode. This means that the app is not yet ready to issue VCs for instance.
-You'll first have to setup an address book.
+You should see that you're running in "INITIALIZING" mode. This means that the app is not yet ready to issue VCs, VPs or serve a status list. But it can already verify VCs and VPs.
 
-## For Issuers: Generating a DID Document and a Status List
+## Run as Issuer
 
-1. Navigate to `localhost:3000/docs`
+To run as issuer, you need to configure a few more environment variables.
+* You'll need to initialize a DID and upload the associated DID Document.
+* You'll need to initialize a file on the Hedera File System to store Status Lists
+* Finally, you'll need to specify the server's public URL so verifiers know where to look up statuses.
+
+To do so, follow those steps:
+
+1. Navigate to `localhost:3000/docs` (or wherever the server is running)
 2. Expand the `POST /admin/init` method. 
 3. Click "try it out" and Execute
 4. Upon execution, copy the document identifier `did:hedera:098sd0fs8d90fg..._0.0.12345` and the Status List file Id `0.0.45678`
@@ -66,7 +75,7 @@ version: "3.6"
 
 services:
   hedera-vc-api:
-    image: meranti/hedera-vc-api:alpha-4
+    image: meranti/hedera-vc-api:alpha-5
     ports:
       - "3000:3000"
     restart: always
