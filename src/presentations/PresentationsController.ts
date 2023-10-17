@@ -25,7 +25,7 @@ interface VerifyPresentationParams {
 export class PresentationsController extends Controller {
   @Post("prove")
   public async provePresentation(
-    @Body() { presentation: { id, holder, verifiableCredential }, options: { challenge } }: ProvePresentationParams
+    @Body() { presentation: { id = "", holder, verifiableCredential }, options: { challenge } }: ProvePresentationParams
   ) {
     const newPresentation = await createPresentation({
       verifiableCredential,

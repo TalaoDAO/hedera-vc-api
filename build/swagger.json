@@ -24,7 +24,7 @@
 			"JSONArray": {
 				"properties": {},
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"JSONValue": {
 				"anyOf": [
@@ -80,7 +80,7 @@
 					"statusListCredential"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"Credential": {
 				"properties": {
@@ -131,7 +131,14 @@
 						"type": "string"
 					},
 					"credentialSubject": {
-						"$ref": "#/components/schemas/JSONObject"
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/JSONObject"
+							},
+							{
+								"$ref": "#/components/schemas/JSONValue"
+							}
+						]
 					},
 					"credentialStatus": {
 						"$ref": "#/components/schemas/CredentialStatus"
@@ -139,14 +146,13 @@
 				},
 				"required": [
 					"@context",
-					"id",
 					"type",
 					"issuer",
 					"issuanceDate",
 					"credentialSubject"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"CredentialIssueOptions": {
 				"properties": {
@@ -164,7 +170,7 @@
 					}
 				},
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"CredentialIssueParams": {
 				"properties": {
@@ -179,7 +185,7 @@
 					"credential"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"SignedVerifiableCredential": {
 				"properties": {
@@ -230,7 +236,14 @@
 						"type": "string"
 					},
 					"credentialSubject": {
-						"$ref": "#/components/schemas/JSONObject"
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/JSONObject"
+							},
+							{
+								"$ref": "#/components/schemas/JSONValue"
+							}
+						]
 					},
 					"credentialStatus": {
 						"$ref": "#/components/schemas/CredentialStatus"
@@ -277,7 +290,6 @@
 				},
 				"required": [
 					"@context",
-					"id",
 					"type",
 					"issuer",
 					"issuanceDate",
@@ -285,7 +297,7 @@
 					"proof"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"CredentialVerifyOptions": {
 				"properties": {
@@ -312,7 +324,7 @@
 					}
 				},
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"CredentialVerifyParams": {
 				"properties": {
@@ -327,7 +339,7 @@
 					"verifiableCredential"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"UpdateCredentialStatusParams": {
 				"properties": {
@@ -366,7 +378,7 @@
 					"credentialStatus"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"DidDocument": {
 				"type": "string"
@@ -444,14 +456,13 @@
 				},
 				"required": [
 					"@context",
-					"id",
 					"type",
 					"holder",
 					"verifiableCredential",
 					"proof"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"Presentation": {
 				"properties": {
@@ -496,13 +507,12 @@
 				},
 				"required": [
 					"@context",
-					"id",
 					"type",
 					"holder",
 					"verifiableCredential"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"ProvePresentationParams": {
 				"properties": {
@@ -515,6 +525,9 @@
 								"type": "string"
 							}
 						},
+						"required": [
+							"challenge"
+						],
 						"type": "object"
 					}
 				},
@@ -523,7 +536,7 @@
 					"options"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
 			"VerifyPresentationParams": {
 				"properties": {
@@ -536,6 +549,9 @@
 								"type": "string"
 							}
 						},
+						"required": [
+							"challenge"
+						],
 						"type": "object"
 					}
 				},
@@ -544,7 +560,7 @@
 					"options"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -633,15 +649,7 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {
-									"properties": {
-										"verifiableCredential": {}
-									},
-									"required": [
-										"verifiableCredential"
-									],
-									"type": "object"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -679,7 +687,9 @@
 											"type": "array"
 										},
 										"checks": {
-											"items": {},
+											"items": {
+												"type": "string"
+											},
 											"type": "array"
 										}
 									},
@@ -832,7 +842,9 @@
 											"type": "array"
 										},
 										"checks": {
-											"items": {},
+											"items": {
+												"type": "string"
+											},
 											"type": "array"
 										}
 									},

@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { loadDidDocument } from "./did";
 import { ClientError } from "../lib/errors";
-import { JSONObject } from "../types/JSON";
+import { JSONObject, JSONValue } from "../types/JSON";
 import { getEnvVar } from "./envVars";
 import { operatorKey } from "./hedera";
 import { importVcAndEd25518Suite } from "../lib/nonEsModules";
@@ -12,12 +12,13 @@ import { createVerificationSuite } from "./verificationSuite";
 
 export interface Credential {
   "@context": (string | JSONObject)[];
-  id: string;
+  id?: string;
   type: string[];
   issuer: string | { id: string };
   issuanceDate: string;
   expirationDate?: string;
-  credentialSubject: JSONObject;
+  // if this is set to JSONObject, tsoa has issues accepting nested arrays...
+  credentialSubject: JSONObject | JSONValue;
   credentialStatus?: CredentialStatus;
 }
 
@@ -74,27 +75,29 @@ export async function verifyCredential(signedCredential: SignedVerifiableCredent
         };
       }
 
-      if (url.startsWith(getEnvVar("ISSUER_SERVER_URL")!)) {
-        const { data: document } = await axios.get(url);
-
-        return {
-          document
-        };
-      }
-
       if (contexts.has(url)) {
         return {
-          document: contexts.get(url)
+          document: contexts.get(url),
+          documentUrl: url
         };
       }
 
-      return vc.defaultDocumentLoader(url);
+      const { data: document } = await axios.get(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+
+      return {
+        document,
+        documentUrl: url
+      };
     }
   });
 
   if (isCredentialVerified.verified) {
     return {
-      checks: [],
+      checks: ["proof"],
       warnings: [],
       errors: []
     };
@@ -123,14 +126,22 @@ export async function issueCredential(credential: Credential) {
   return vc.issue({
     credential,
     suite,
-    documentLoader: (url: string) => {
+    documentLoader: async (url: string) => {
       if (contexts.has(url)) {
         return {
           document: contexts.get(url)
         };
       }
+      const { data: document } = await axios.get(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
 
-      return vc.defaultDocumentLoader(url);
+      return {
+        document,
+        documentUrl: url
+      };
     }
   });
 }

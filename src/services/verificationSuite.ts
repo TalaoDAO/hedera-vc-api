@@ -1,4 +1,4 @@
-import { ClientError, NotFoundError } from "../lib/errors";
+import { ClientError } from "../lib/errors";
 import { importVcAndEd25518Suite } from "../lib/nonEsModules";
 import { loadDidDocument } from "./did";
 
@@ -8,7 +8,7 @@ export async function createVerificationSuite(didIdentifier: string) {
   try {
     resolvedDid = await loadDidDocument(didIdentifier);
   } catch (e) {
-    if (e instanceof NotFoundError) {
+    if (e instanceof Error) {
       throw new ClientError(`Invalid proof, no DID Document with id ${didIdentifier}`);
     }
   }

@@ -74,9 +74,17 @@ export class CredentialsController extends Controller {
         credentialWithStatus = credential;
       }
 
-      return {
-        verifiableCredential: await issueCredential(credentialWithStatus)
-      };
+      this.setStatus(201);
+
+      let issuedCredential;
+
+      try {
+        issuedCredential = await issueCredential(credentialWithStatus);
+      } catch (e) {
+        throw new ClientError("Unable to issue credential");
+      }
+
+      return issuedCredential;
     }
   }
 

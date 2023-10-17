@@ -31,7 +31,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "JSONValue": {
@@ -48,22 +48,22 @@ const models: TsoaRoute.Models = {
             "statusListIndex": {"dataType":"string","required":true},
             "statusListCredential": {"dataType":"string","required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Credential": {
         "dataType": "refObject",
         "properties": {
             "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
-            "id": {"dataType":"string","required":true},
+            "id": {"dataType":"string"},
             "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "issuer": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true}}}],"required":true},
             "issuanceDate": {"dataType":"string","required":true},
             "expirationDate": {"dataType":"string"},
-            "credentialSubject": {"ref":"JSONObject","required":true},
+            "credentialSubject": {"dataType":"union","subSchemas":[{"ref":"JSONObject"},{"ref":"JSONValue"}],"required":true},
             "credentialStatus": {"ref":"CredentialStatus"},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CredentialIssueOptions": {
@@ -74,7 +74,7 @@ const models: TsoaRoute.Models = {
             "domain": {"dataType":"string"},
             "credentialStatus": {"ref":"CredentialStatus"},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CredentialIssueParams": {
@@ -83,23 +83,23 @@ const models: TsoaRoute.Models = {
             "credential": {"ref":"Credential","required":true},
             "options": {"ref":"CredentialIssueOptions"},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SignedVerifiableCredential": {
         "dataType": "refObject",
         "properties": {
             "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
-            "id": {"dataType":"string","required":true},
+            "id": {"dataType":"string"},
             "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "issuer": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true}}}],"required":true},
             "issuanceDate": {"dataType":"string","required":true},
             "expirationDate": {"dataType":"string"},
-            "credentialSubject": {"ref":"JSONObject","required":true},
+            "credentialSubject": {"dataType":"union","subSchemas":[{"ref":"JSONObject"},{"ref":"JSONValue"}],"required":true},
             "credentialStatus": {"ref":"CredentialStatus"},
             "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"proofValue":{"dataType":"string"},"jws":{"dataType":"string","required":true},"proofPurpose":{"dataType":"string","required":true},"verificationMethod":{"dataType":"string","required":true},"nonce":{"dataType":"string"},"domain":{"dataType":"string"},"challenge":{"dataType":"string"},"created":{"dataType":"string","required":true},"type":{"dataType":"string","required":true}},"required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CredentialVerifyOptions": {
@@ -109,7 +109,7 @@ const models: TsoaRoute.Models = {
             "domain": {"dataType":"string"},
             "credentialStatus": {"dataType":"nestedObjectLiteral","nestedProperties":{"type":{"dataType":"enum","enums":["StatusList2021Entry"],"required":true}}},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CredentialVerifyParams": {
@@ -118,7 +118,7 @@ const models: TsoaRoute.Models = {
             "verifiableCredential": {"ref":"SignedVerifiableCredential","required":true},
             "options": {"ref":"CredentialVerifyOptions"},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateCredentialStatusParams": {
@@ -127,7 +127,7 @@ const models: TsoaRoute.Models = {
             "credentialId": {"dataType":"string","required":true},
             "credentialStatus": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["true"]},{"dataType":"enum","enums":["false"]}],"required":true},"type":{"dataType":"enum","enums":["revocation"],"required":true}}},"required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DidDocument": {
@@ -139,43 +139,43 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
-            "id": {"dataType":"string","required":true},
+            "id": {"dataType":"string"},
             "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "holder": {"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}],"required":true},
             "verifiableCredential": {"dataType":"array","array":{"dataType":"refObject","ref":"SignedVerifiableCredential"},"required":true},
             "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"jws":{"dataType":"string","required":true},"verificationMethod":{"dataType":"string","required":true},"proofPurpose":{"dataType":"string","required":true},"challenge":{"dataType":"string"},"created":{"dataType":"string","required":true},"type":{"dataType":"string","required":true}},"required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Presentation": {
         "dataType": "refObject",
         "properties": {
             "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
-            "id": {"dataType":"string","required":true},
+            "id": {"dataType":"string"},
             "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "holder": {"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}],"required":true},
             "verifiableCredential": {"dataType":"array","array":{"dataType":"refObject","ref":"SignedVerifiableCredential"},"required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ProvePresentationParams": {
         "dataType": "refObject",
         "properties": {
             "presentation": {"ref":"Presentation","required":true},
-            "options": {"dataType":"nestedObjectLiteral","nestedProperties":{"challenge":{"dataType":"string"}},"required":true},
+            "options": {"dataType":"nestedObjectLiteral","nestedProperties":{"challenge":{"dataType":"string","required":true}},"required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "VerifyPresentationParams": {
         "dataType": "refObject",
         "properties": {
             "verifiablePresentation": {"ref":"SignedPresentation","required":true},
-            "options": {"dataType":"nestedObjectLiteral","nestedProperties":{"challenge":{"dataType":"string"}},"required":true},
+            "options": {"dataType":"nestedObjectLiteral","nestedProperties":{"challenge":{"dataType":"string","required":true}},"required":true},
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -475,24 +475,24 @@ export function RegisterRoutes(app: Router) {
                 case 'request':
                     return request;
                 case 'query':
-                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                 case 'queries':
-                    return validationService.ValidateParam(args[key], request.query, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.query, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                 case 'path':
-                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                 case 'header':
-                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                 case 'body':
-                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                 case 'body-prop':
-                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', {"noImplicitAdditionalProperties":"ignore"});
                 case 'formData':
                     if (args[key].dataType === 'file') {
-                        return validationService.ValidateParam(args[key], request.file, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                        return validationService.ValidateParam(args[key], request.file, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                     } else if (args[key].dataType === 'array' && args[key].array.dataType === 'file') {
-                        return validationService.ValidateParam(args[key], request.files, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                        return validationService.ValidateParam(args[key], request.files, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                     } else {
-                        return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                        return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"ignore"});
                     }
                 case 'res':
                     return responder(response);

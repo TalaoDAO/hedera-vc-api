@@ -9,7 +9,7 @@ import { createVerificationSuite } from "./verificationSuite";
 
 export interface Presentation {
   "@context": (string | JSONObject)[];
-  id: string;
+  id?: string;
   type: string[];
   holder: string | JSONObject;
   verifiableCredential: SignedVerifiableCredential[];
@@ -112,7 +112,7 @@ export async function verifyPresentation(presentation: SignedPresentation, chall
 
   if (isPresentationVerified.verified) {
     return {
-      checks: [],
+      checks: ["proof"],
       warnings: [],
       errors: []
     };
