@@ -38,7 +38,7 @@ export interface StatusList {
   setStatus: (index: number, isRevoked: boolean) => void;
 }
 
-export async function createStatusList(length: number): Promise<StatusList> {
+export async function createStatusList(length = STATUS_LIST_LENGTH): Promise<StatusList> {
   const statusList = await loadStatusList();
   return statusList.createList({ length });
 }

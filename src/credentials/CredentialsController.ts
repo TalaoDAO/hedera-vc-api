@@ -11,6 +11,7 @@ import { APPLICATION_STATUS, getApplicationStatus } from "../admin/admin";
 import { ClientError, NotFoundError } from "../lib/errors";
 import { getEnvVar } from "../services/envVars";
 import {
+  createStatusList,
   decodeStatusList,
   encodeStatusList,
   ensureHfsStatusListForCredential,
@@ -57,7 +58,9 @@ interface UpdateCredentialStatusParams {
 export class CredentialsController extends Controller {
   @Post("issue")
   @SuccessResponse("201", "Issued")
-  public async issueCredential(@Body() { credential, options }: CredentialIssueParams): Promise<SignedVerifiableCredential> {
+  public async issueCredential(
+    @Body() { credential, options }: CredentialIssueParams
+  ): Promise<SignedVerifiableCredential> {
     const status = await getApplicationStatus();
 
     if (status.status !== APPLICATION_STATUS.OK) {
@@ -104,8 +107,11 @@ export class CredentialsController extends Controller {
 
     const statusList = await hfsGetStatusList(getEnvVar("STATUS_LIST_FILE_ID")!);
 
+    // If the status list doesn't exist yet, it's not an issue
+    // it only exists when a credential in the list is first revoked
+    // so we still return a VC with a status list, it'll just be empty
     if (!statusList[statusListId]) {
-      throw new NotFoundError(`Unable to find status list with id ${statusListId}`);
+      statusList[statusListId] = await encodeStatusList(await createStatusList());
     }
 
     return issueStatusListCredential({
