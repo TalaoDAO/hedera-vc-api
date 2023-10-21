@@ -20,6 +20,18 @@ const models: TsoaRoute.Models = {
         "enums": ["INITIALIZING","ERROR","OK"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialStatus": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"enum","enums":["StatusList2021Entry"],"required":true},
+            "statusPurpose": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["revocation"]},{"dataType":"enum","enums":["suspension"]}],"required":true},
+            "statusListIndex": {"dataType":"string","required":true},
+            "statusListCredential": {"dataType":"string","required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "JSONObject": {
         "dataType": "refObject",
         "properties": {
@@ -39,14 +51,18 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"},{"dataType":"boolean"},{"ref":"JSONObject"},{"ref":"JSONArray"}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialStatus": {
+    "SignedVerifiableCredential": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"string","required":true},
-            "type": {"dataType":"enum","enums":["StatusList2021Entry"],"required":true},
-            "statusPurpose": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["revocation"]},{"dataType":"enum","enums":["suspension"]}],"required":true},
-            "statusListIndex": {"dataType":"string","required":true},
-            "statusListCredential": {"dataType":"string","required":true},
+            "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
+            "id": {"dataType":"string"},
+            "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "issuer": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true}}}],"required":true},
+            "issuanceDate": {"dataType":"string","required":true},
+            "expirationDate": {"dataType":"string"},
+            "credentialSubject": {"dataType":"union","subSchemas":[{"ref":"JSONObject"},{"ref":"JSONValue"}],"required":true},
+            "credentialStatus": {"ref":"CredentialStatus"},
+            "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"proofValue":{"dataType":"string"},"jws":{"dataType":"string","required":true},"proofPurpose":{"dataType":"string","required":true},"verificationMethod":{"dataType":"string","required":true},"nonce":{"dataType":"string"},"domain":{"dataType":"string"},"challenge":{"dataType":"string"},"created":{"dataType":"string","required":true},"type":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": true,
     },
@@ -82,22 +98,6 @@ const models: TsoaRoute.Models = {
         "properties": {
             "credential": {"ref":"Credential","required":true},
             "options": {"ref":"CredentialIssueOptions"},
-        },
-        "additionalProperties": true,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SignedVerifiableCredential": {
-        "dataType": "refObject",
-        "properties": {
-            "@context": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"string"},{"ref":"JSONObject"}]},"required":true},
-            "id": {"dataType":"string"},
-            "type": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "issuer": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true}}}],"required":true},
-            "issuanceDate": {"dataType":"string","required":true},
-            "expirationDate": {"dataType":"string"},
-            "credentialSubject": {"dataType":"union","subSchemas":[{"ref":"JSONObject"},{"ref":"JSONValue"}],"required":true},
-            "credentialStatus": {"ref":"CredentialStatus"},
-            "proof": {"dataType":"nestedObjectLiteral","nestedProperties":{"proofValue":{"dataType":"string"},"jws":{"dataType":"string","required":true},"proofPurpose":{"dataType":"string","required":true},"verificationMethod":{"dataType":"string","required":true},"nonce":{"dataType":"string"},"domain":{"dataType":"string"},"challenge":{"dataType":"string"},"created":{"dataType":"string","required":true},"type":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": true,
     },
@@ -269,7 +269,7 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.issueCredential.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              promiseHandler(controller, promise, response, 201, next);
             } catch (err) {
                 return next(err);
             }
@@ -394,7 +394,7 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.provePresentation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              promiseHandler(controller, promise, response, 201, next);
             } catch (err) {
                 return next(err);
             }

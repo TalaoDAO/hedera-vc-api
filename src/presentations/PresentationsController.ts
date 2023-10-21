@@ -1,4 +1,4 @@
-import { Controller, Post, Route, Body } from "tsoa";
+import { Controller, Post, Route, Body, SuccessResponse } from "tsoa";
 import {
   Presentation,
   SignedPresentation,
@@ -24,6 +24,7 @@ interface VerifyPresentationParams {
 @Route("presentations")
 export class PresentationsController extends Controller {
   @Post("prove")
+  @SuccessResponse("201", "Proved")
   public async provePresentation(
     @Body() { presentation: { id = "", holder, verifiableCredential }, options: { challenge } }: ProvePresentationParams
   ) {
@@ -32,6 +33,8 @@ export class PresentationsController extends Controller {
       id,
       holder
     });
+
+    this.setStatus(201);
 
     return signPresentation({
       presentation: newPresentation,

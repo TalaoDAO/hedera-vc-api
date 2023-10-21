@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Path, Post, Route } from "tsoa";
+import { Body, Controller, Get, Path, Post, Route, SuccessResponse } from "tsoa";
 
 import {
   Credential,
@@ -56,7 +56,8 @@ interface UpdateCredentialStatusParams {
 @Route("credentials")
 export class CredentialsController extends Controller {
   @Post("issue")
-  public async issueCredential(@Body() { credential, options }: CredentialIssueParams) {
+  @SuccessResponse("201", "Issued")
+  public async issueCredential(@Body() { credential, options }: CredentialIssueParams): Promise<SignedVerifiableCredential> {
     const status = await getApplicationStatus();
 
     if (status.status !== APPLICATION_STATUS.OK) {

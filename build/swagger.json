@@ -14,38 +14,6 @@
 				],
 				"type": "string"
 			},
-			"JSONObject": {
-				"properties": {},
-				"type": "object",
-				"additionalProperties": {
-					"$ref": "#/components/schemas/JSONValue"
-				}
-			},
-			"JSONArray": {
-				"properties": {},
-				"type": "object",
-				"additionalProperties": true
-			},
-			"JSONValue": {
-				"anyOf": [
-					{
-						"type": "string"
-					},
-					{
-						"type": "number",
-						"format": "double"
-					},
-					{
-						"type": "boolean"
-					},
-					{
-						"$ref": "#/components/schemas/JSONObject"
-					},
-					{
-						"$ref": "#/components/schemas/JSONArray"
-					}
-				]
-			},
 			"CredentialStatus": {
 				"properties": {
 					"id": {
@@ -82,110 +50,37 @@
 				"type": "object",
 				"additionalProperties": true
 			},
-			"Credential": {
-				"properties": {
-					"@context": {
-						"items": {
-							"anyOf": [
-								{
-									"type": "string"
-								},
-								{
-									"$ref": "#/components/schemas/JSONObject"
-								}
-							]
-						},
-						"type": "array"
-					},
-					"id": {
-						"type": "string"
-					},
-					"type": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"issuer": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"properties": {
-									"id": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"id"
-								],
-								"type": "object"
-							}
-						]
-					},
-					"issuanceDate": {
-						"type": "string"
-					},
-					"expirationDate": {
-						"type": "string"
-					},
-					"credentialSubject": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/JSONObject"
-							},
-							{
-								"$ref": "#/components/schemas/JSONValue"
-							}
-						]
-					},
-					"credentialStatus": {
-						"$ref": "#/components/schemas/CredentialStatus"
-					}
-				},
-				"required": [
-					"@context",
-					"type",
-					"issuer",
-					"issuanceDate",
-					"credentialSubject"
-				],
+			"JSONObject": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"$ref": "#/components/schemas/JSONValue"
+				}
+			},
+			"JSONArray": {
+				"properties": {},
 				"type": "object",
 				"additionalProperties": true
 			},
-			"CredentialIssueOptions": {
-				"properties": {
-					"created": {
+			"JSONValue": {
+				"anyOf": [
+					{
 						"type": "string"
 					},
-					"challenge": {
-						"type": "string"
+					{
+						"type": "number",
+						"format": "double"
 					},
-					"domain": {
-						"type": "string"
+					{
+						"type": "boolean"
 					},
-					"credentialStatus": {
-						"$ref": "#/components/schemas/CredentialStatus"
+					{
+						"$ref": "#/components/schemas/JSONObject"
+					},
+					{
+						"$ref": "#/components/schemas/JSONArray"
 					}
-				},
-				"type": "object",
-				"additionalProperties": true
-			},
-			"CredentialIssueParams": {
-				"properties": {
-					"credential": {
-						"$ref": "#/components/schemas/Credential"
-					},
-					"options": {
-						"$ref": "#/components/schemas/CredentialIssueOptions"
-					}
-				},
-				"required": [
-					"credential"
-				],
-				"type": "object",
-				"additionalProperties": true
+				]
 			},
 			"SignedVerifiableCredential": {
 				"properties": {
@@ -295,6 +190,111 @@
 					"issuanceDate",
 					"credentialSubject",
 					"proof"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Credential": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JSONObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"issuer": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"properties": {
+									"id": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"id"
+								],
+								"type": "object"
+							}
+						]
+					},
+					"issuanceDate": {
+						"type": "string"
+					},
+					"expirationDate": {
+						"type": "string"
+					},
+					"credentialSubject": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/JSONObject"
+							},
+							{
+								"$ref": "#/components/schemas/JSONValue"
+							}
+						]
+					},
+					"credentialStatus": {
+						"$ref": "#/components/schemas/CredentialStatus"
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"issuer",
+					"issuanceDate",
+					"credentialSubject"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CredentialIssueOptions": {
+				"properties": {
+					"created": {
+						"type": "string"
+					},
+					"challenge": {
+						"type": "string"
+					},
+					"domain": {
+						"type": "string"
+					},
+					"credentialStatus": {
+						"$ref": "#/components/schemas/CredentialStatus"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CredentialIssueParams": {
+				"properties": {
+					"credential": {
+						"$ref": "#/components/schemas/Credential"
+					},
+					"options": {
+						"$ref": "#/components/schemas/CredentialIssueOptions"
+					}
+				},
+				"required": [
+					"credential"
 				],
 				"type": "object",
 				"additionalProperties": true
@@ -746,11 +746,13 @@
 			"post": {
 				"operationId": "IssueCredential",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"201": {
+						"description": "Issued",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/SignedVerifiableCredential"
+								}
 							}
 						}
 					}
@@ -901,8 +903,8 @@
 			"post": {
 				"operationId": "ProvePresentation",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"201": {
+						"description": "Proved",
 						"content": {
 							"application/json": {
 								"schema": {
