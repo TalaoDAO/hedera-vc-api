@@ -1,8 +1,8 @@
 # Hedera VC HTTP API
 
-A Simple REST API to manage Hedera Verifiable Credentials, Verifiable Presentations and DIDs.
-This API can be setup as an Issuer or a verifier.
-Ideally, it should be setup as one or the other, not as both to ensure privacy.
+Easily manage Hedera Decentralized Identifiers and issue, verify, revoke or suspend credentials and presentations using this simple HTTP API.
+
+This API can be setup as an Issuer or a Verifier, or both.
 
 Features it supports:
 
@@ -13,7 +13,17 @@ Features it supports:
 5. [Verifier] Verify a Presentation issued by a `did:hedera`
 6. [Issuer] Revoke a Verifiable Presentation using a 2021 Status List.
 
+## API Docs
+
+This API is compliant with the [VC API](https://w3c-ccg.github.io/vc-api/#the-vc-api) specifications.
+The actual swagger for this service is available [here](./build/swagger.json).
+When the service is running, the swagger is also served at the `/docs` url.
+
 ## Install
+
+If you just want to consume this API and have docker setup, you may directly use the provided [docker image](#docker), see below.
+
+This API runs a node.js server, ensure you have node >18 installed and clone this repository, then:
 
 ```
 npm install
@@ -90,9 +100,9 @@ services:
 
 ## Literature
 
-* [Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/#issue-credential)
+* [Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/)
 * [SpruceId, An existing implementation](https://www.spruceid.dev/didkit/didkit-packages/http-server)
 * [Hedera Tech Insights: Maintaining a DID registry](https://hedera.com/blog/maintaining-a-decentralized-identity-registry-with-hedera)
 * [The Hedera JS DID SDK](https://github.com/hashgraph/did-sdk-js)
-* [The HEDERA JS DID SDK with HIP-27](https://github.com/Meeco/hedera-did-sdk-js)
+* [The Hedera JS DID SDK with HIP-27](https://github.com/Meeco/hedera-did-sdk-js)
 * [HIP-27](https://hips.hedera.com/hip/hip-27)
