@@ -664,7 +664,13 @@
 				"additionalProperties": true
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"api_key": {
+				"type": "apiKey",
+				"name": "access_token",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "hedera-vc-api",
@@ -707,7 +713,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -738,7 +748,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -757,7 +771,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -807,7 +825,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -856,7 +878,11 @@
 						"description": "No content"
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -914,7 +940,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -964,7 +994,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"api_key": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,

@@ -1,4 +1,4 @@
-import { Controller, Post, Route, Body, SuccessResponse } from "tsoa";
+import { Controller, Post, Route, Body, SuccessResponse, Security } from "tsoa";
 import {
   Presentation,
   SignedPresentation,
@@ -22,6 +22,7 @@ interface VerifyPresentationParams {
 }
 
 @Route("presentations")
+@Security("api_key")
 export class PresentationsController extends Controller {
   @Post("prove")
   @SuccessResponse("201", "Proved")

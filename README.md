@@ -98,6 +98,26 @@ services:
       - ISSUER_SERVER_URL=youserver.com # this url will show in the status list credential so verifiers know where to find the status 
 ```
 
+## Secure API with API_KEY
+
+You may also additionnally secure your APIs with an API_KEY.
+
+First, set a preferably long, random key as an environment variable:
+
+```
+API_KEY=<your long, random api key here>
+```
+
+Then add the API_KEY to every request by setting `access_token` in the headers:
+
+```sh
+curl -X 'GET' \
+  'http://localhost:3001/admin/status' \
+  -H 'accept: application/json' \
+  -H 'access_token: <the long, random api key>'
+```
+
+
 ## Literature
 
 * [Proposed Standard for a VC API](https://w3c-ccg.github.io/vc-api/)

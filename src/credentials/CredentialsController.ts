@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Path, Post, Route, SuccessResponse } from "tsoa";
+import { Body, Controller, Get, Path, Post, Route, Security, SuccessResponse } from "tsoa";
 
 import {
   Credential,
@@ -57,6 +57,7 @@ interface UpdateCredentialStatusParams {
 @Route("credentials")
 export class CredentialsController extends Controller {
   @Post("issue")
+  @Security("api_key")
   @SuccessResponse("201", "Issued")
   public async issueCredential(
     @Body() { credential, options }: CredentialIssueParams
@@ -93,6 +94,7 @@ export class CredentialsController extends Controller {
   }
 
   @Post("verify")
+  @Security("api_key")
   public verifyCredential(@Body() { verifiableCredential }: CredentialVerifyParams) {
     return verifyCredential(verifiableCredential);
   }
@@ -130,6 +132,7 @@ export class CredentialsController extends Controller {
   }
 
   @Post("status/{statusListId}")
+  @Security("api_key")
   public async setStatusList(
     @Path() statusListId: number,
     @Body() { credentialId, credentialStatus }: UpdateCredentialStatusParams

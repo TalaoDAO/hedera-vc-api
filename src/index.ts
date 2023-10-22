@@ -12,7 +12,7 @@ import { RegisterRoutes } from "../build/routes";
 import { loadDidDocument } from "./services/did";
 import { APPLICATION_STATUS, getApplicationStatus } from "./admin/admin";
 import { getEnvVar, hasEnvVar } from "./services/envVars";
-import { ClientError, NotFoundError } from "./lib/errors";
+import { AuthenticationError, ClientError, NotFoundError } from "./lib/errors";
 
 const app = express();
 
@@ -72,6 +72,13 @@ async function initApp() {
    * Error handling
    */
   app.use(function errorHandler(err: unknown, req: Request, res: Response, next: NextFunction): Response | void {
+    if (err instanceof AuthenticationError) {
+      console.warn(`Unauthorized API call ${err.message}`);
+      return res.status(401).json({
+        message: err.message
+      });
+    }
+
     if (err instanceof NotFoundError) {
       console.warn(`Resource not found ${err.message}`);
       return res.status(404).json({

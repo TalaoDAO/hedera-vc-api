@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Route } from "tsoa";
+import { Controller, Get, Post, Route, Security } from "tsoa";
 
 import { getApplicationStatus, initApplication } from "./admin";
 
 @Route("admin")
+@Security("api_key")
 export class AdminController extends Controller {
   @Post("init")
   public async createIdentityNetwork() {

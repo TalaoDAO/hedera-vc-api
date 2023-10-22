@@ -5,9 +5,17 @@
   ],
   "spec": {
     "outputDirectory": "build",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "access_token",
+        "in": "header"
+      }
+    }
   },
   "routes": {
-    "routesDir": "build"
+    "routesDir": "build",
+    "authenticationModule": "./authentication.ts"
   }
 }
