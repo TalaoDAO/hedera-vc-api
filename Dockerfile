@@ -9,6 +9,7 @@ COPY package.json .
 COPY package-lock.json .
 COPY tsconfig.json .
 COPY tsoa.json .
+COPY authentication.ts .
 
 RUN npm install
 RUN npx tsoa spec-and-routes
