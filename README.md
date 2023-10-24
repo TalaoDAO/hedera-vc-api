@@ -108,13 +108,13 @@ First, set a preferably long, random key as an environment variable:
 API_KEY=<your long, random api key here>
 ```
 
-Then add the API_KEY to every request by setting `access_token` in the headers:
+Then add the API_KEY to every request by setting `x-api-key` in the headers:
 
 ```sh
 curl -X 'GET' \
   'http://localhost:3001/admin/status' \
   -H 'accept: application/json' \
-  -H 'access_token: <the long, random api key>'
+  -H 'x-api-key: <the long, random api key>'
 ```
 
 

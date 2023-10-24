@@ -667,7 +667,7 @@
 		"securitySchemes": {
 			"api_key": {
 				"type": "apiKey",
-				"name": "access_token",
+				"name": "x-api-key",
 				"in": "header"
 			}
 		}

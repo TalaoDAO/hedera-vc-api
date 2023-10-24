@@ -7,7 +7,7 @@ export function expressAuthentication(
   _scopes?: string[]
 ): Promise<{}> {
   if (securityName === "api_key") {
-    const token= request.headers.access_token;
+    const token = request.headers["x-api-key"];
 
     if (token === process.env.API_KEY) {
       return Promise.resolve({});
