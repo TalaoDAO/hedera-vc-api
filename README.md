@@ -13,6 +13,9 @@ Features it supports:
 5. [Verifier] Verify a Presentation issued by a `did:hedera`
 6. [Issuer] Revoke a Verifiable Presentation using a 2021 Status List.
 
+Following the [HIP-27](https://hips.hedera.com/hip/hip-27) proposal, the generated DID Document is stored on [Hedera Consensus Service].
+The resulting status list is store on [Hedera's File System], making it easy for anybody to retrieve it and test its content.
+
 ## API Docs
 
 This API is compliant with the [VC API](https://w3c-ccg.github.io/vc-api/#the-vc-api) specifications.
