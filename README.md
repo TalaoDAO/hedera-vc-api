@@ -84,7 +84,7 @@ You'll find our [images here](https://hub.docker.com/r/meranti/hedera-vc-api/tag
 
 
 ```yaml
-version: "3.6"
+version: "3.8"
 
 services:
   hedera-vc-api:
@@ -119,6 +119,14 @@ curl -X 'GET' \
   -H 'accept: application/json' \
   -H 'x-api-key: <the long, random api key>'
 ```
+
+## Example
+
+To better understand how this service works, you make take a look at our curl examples:
+
+[./examples/01-issue-verify-VC.md] issue a VC and verify it.
+[./examples/02-VC-status.md] issue a VC with a status, revoke it and verify.
+[./examples/03-issue-verify-VP.md] issue a VP and verify it.
 
 
 ## Literature
