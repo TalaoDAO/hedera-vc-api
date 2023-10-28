@@ -17,7 +17,7 @@ Let's use this `credentialStatus` as an example:
   },
 ```
 
-We can retrieve the the index `1337` in the status list `2` like this:
+We can retrieve the index `1337` in the status list `2` like this:
 
 ```js
 const { Client, FileContentsQuery } = require("@hashgraph/sdk");

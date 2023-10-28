@@ -127,6 +127,7 @@ To better understand how this service works, you make take a look at our curl ex
 1. [issue a VC and verify](./examples/01-issue-verify-VC.md)
 2. [issue a VC with a status, revoke it and verify](./examples/02-VC-status.md)
 3. [issue a VP and verify it](./examples/03-issue-verify-VP.md)
+4. [read a status list from hfs](./examples/04-read-status-list-from-hfs.md)
 
 ## Literature
 
