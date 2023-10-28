@@ -1,7 +1,7 @@
 # Read Status List From HFS
 
 In order for you to read a status list from HFS, you need to know its file id.
-The issuer should provide you with the file id as it's not yet passed within the credential.
+Given a `credentialStatus` with url `http://localhost:3004/credentials/status/0.0.12345/0#0`, the file id is `0.0.12345`.
 
 Provided that you possess the HFS file id, the status list id, and the index, you may check a credential's revocation status.
 
@@ -9,11 +9,11 @@ Let's use this `credentialStatus` as an example:
 
 ```json
 "credentialStatus": {
-    "id": "http://localhost:3004/credentials/status/2#1337",
+    "id": "http://localhost:3004/credentials/status/0.0.12345/2#1337",
     "type": "StatusList2021Entry",
     "statusListIndex": "1337",
     "statusPurpose": "revocation",
-    "statusListCredential": "http://localhost:3004/credentials/status/2"
+    "statusListCredential": "http://localhost:3004/credentials/status/0.0.12345/2"
   },
 ```
 
@@ -26,7 +26,7 @@ const sl = require("@digitalbazaar/vc-status-list");
 const client = Client.forTestnet();
 client.setOperator("<hedera account id x.z.y>", "<hedera secret key 302... comes here>");
 
-const query = new FileContentsQuery().setFileId("<HFS File id x.y.z comes here>");
+const query = new FileContentsQuery().setFileId("0.0.12345");
 const contents = await query.execute(client);
 
 const statusLists = JSON.parse(String(contents));

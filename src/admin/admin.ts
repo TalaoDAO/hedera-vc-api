@@ -35,11 +35,6 @@ export async function getApplicationStatus() {
       status: APPLICATION_STATUS.INITIALIZING,
       message: "Please set HEDERA_DID environment variable with a valid HIP-27 identifier."
     };
-  } else if (!hasEnvVar("STATUS_LIST_FILE_ID")) {
-    return {
-      status: APPLICATION_STATUS.INITIALIZING,
-      message: "Please set STATUS_LIST_FILE_ID environment variable with a valid hedera file id."
-    };
   } else {
     const registeredDid = await loadDidDocument(getEnvVar("HEDERA_DID")!)!;
 

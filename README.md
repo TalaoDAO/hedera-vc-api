@@ -66,17 +66,16 @@ You should see that you're running in "INITIALIZING" mode. This means that the a
 To run as issuer, you need to configure a few more environment variables.
 
 - You'll need to initialize a DID and upload the associated DID Document.
-- You'll need to initialize a file on the Hedera File System to store Status Lists
-- Finally, you'll need to specify the server's public URL so verifiers know where to look up statuses.
+- You'll need to create a status list and keep its file id safe as it's the place where you'll maintain revocation statuses.
+- You'll need to specify the server's public URL so verifiers know where to look up statuses.
 
 To do so, follow those steps:
 
 1. Navigate to `localhost:3000/docs` (or wherever the server is running)
 2. Expand the `POST /admin/init` method.
 3. Click "try it out" and Execute
-4. Upon execution, copy the document identifier `did:hedera:098sd0fs8d90fg..._0.0.12345` and the Status List file Id `0.0.45678`
+4. Upon execution, copy the document identifier `did:hedera:098sd0fs8d90fg..._0.0.12345`
 5. set a new `HEDERA_DID` environment variable with the document identifier
-6. set a new `STATUS_LIST_FILE_ID` environment variable with the Status List file id
 7. set the `ISSUER_SERVER_URL` environment variables with the url to the server. This will show in the StatusList credential so verifiers which url to hit to retrieve the verification list. Set it to `http://localhost:3001` if running locally.
 8. Restart the app with the environment variable set, you should now be in "OK" mode. You can check it with the `GET /admin/status` method.
 
@@ -90,7 +89,7 @@ version: "3.8"
 
 services:
   hedera-vc-api:
-    image: meranti/hedera-vc-api:beta-1
+    image: meranti/hedera-vc-api:beta-2
     ports:
       - "3000:3000"
     restart: always
@@ -99,7 +98,6 @@ services:
       - HEDERA_PRIVATE_KEY=<b8104000..4502f>
       - HEDERA_NETWORK=<testnet | mainnet>
       - HEDERA_DID=<decentralized identifier if you want to setup the server as Issuer>
-      - STATUS_LIST_FILE_ID=<status list file id if you want to setup the server as Issuer>
       - ISSUER_SERVER_URL=youserver.com # this url will show in the status list credential so verifiers know where to find the status
 ```
 

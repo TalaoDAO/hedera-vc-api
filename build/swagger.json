@@ -453,9 +453,9 @@
 								"status": {
 									"type": "string",
 									"enum": [
-										"true",
-										"false"
-									]
+										"true"
+									],
+									"nullable": false
 								},
 								"type": {
 									"type": "string",
@@ -674,7 +674,7 @@
 	},
 	"info": {
 		"title": "hedera-vc-api",
-		"version": "0.0.1",
+		"version": "0.1.0",
 		"description": "REST API to manage Hedera Verifiable Credentials, Presentations and DIDs",
 		"license": {
 			"name": "MIT"
@@ -843,7 +843,7 @@
 				}
 			}
 		},
-		"/credentials/status/{statusListId}": {
+		"/credentials/status/{statusListFileId}/{statusListId}": {
 			"get": {
 				"operationId": "GetStatusList",
 				"responses": {
@@ -860,6 +860,14 @@
 				},
 				"security": [],
 				"parameters": [
+					{
+						"in": "path",
+						"name": "statusListFileId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "path",
 						"name": "statusListId",
@@ -884,6 +892,14 @@
 					}
 				],
 				"parameters": [
+					{
+						"in": "path",
+						"name": "statusListFileId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "path",
 						"name": "statusListId",

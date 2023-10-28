@@ -5,8 +5,7 @@ import hederaClient, { operatorKey } from "./hedera";
 import { loadDidDocument } from "./did";
 import { getEnvVar } from "./envVars";
 import { importVcAndEd25518Suite, loadStatusList } from "../lib/nonEsModules";
-import { CredentialStatus, SignedVerifiableCredential } from "./credential";
-import { ClientError } from "../lib/errors";
+import { SignedVerifiableCredential } from "./credential";
 import contexts from "../lib/contexts";
 import { JSONObject } from "../types/JSON";
 import { STATUS_LIST_LENGTH } from "./constants";
@@ -91,28 +90,6 @@ export async function hfsGetStatusList(fileId: string): Promise<string[]> {
   const contents = await query.execute(hederaClient);
 
   return JSON.parse(String(contents));
-}
-
-export async function ensureHfsStatusListForCredential(credentialStatus: CredentialStatus) {
-  const statusListId = Number(credentialStatus.statusListCredential.split("/").pop());
-  const index = Number(credentialStatus.statusListIndex);
-
-  if (!(statusListId >= 0)) {
-    throw new ClientError("Invalid status list id");
-  }
-
-  if (index >= STATUS_LIST_LENGTH) {
-    throw new ClientError(`statusListIndex should be between 0 and ${STATUS_LIST_LENGTH - 1}`);
-  }
-
-  const statusListFiledId = getEnvVar("STATUS_LIST_FILE_ID")!;
-
-  const statusList = await hfsGetStatusList(statusListFiledId);
-
-  if (typeof statusList[statusListId] !== "string") {
-    statusList[statusListId] = await encodeStatusList(await createStatusList(STATUS_LIST_LENGTH));
-    await hfsUpdateStatusList(statusListFiledId, statusList);
-  }
 }
 
 export async function issueStatusListCredential(
