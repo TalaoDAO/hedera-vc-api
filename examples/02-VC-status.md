@@ -3,8 +3,9 @@
 To be able to revoke a credential, we first need to assign it a status.
 Revocation means that the issuer considers the Verfiable Credential as no longer valid.
 As the Verfiable Credential is in it's owner's posession, it can't be mutated to indicate the new status.
-As a result, the credential is given an index in a list of statuses which can be looked up elsewhere.
-A verifier only needs to know the location of the status list, retrieve it, and check the index specified by the issuer to see if it's off or on, for valid or revoked.
+As a result, the credential is given an index in a list of statuses which can be looked up on the [Hedera File Service](https://docs.hedera.com/hedera/sdks-and-apis/sdks/file-service).
+
+A verifier only needs to know the location of the status list on HFS, retrieve it, and check the index specified by the issuer to see if it's off or on, for valid or revoked.
 
 ## Verifiable Credential with Status Issuance
 
@@ -56,11 +57,11 @@ First, let's issue a credential with a status. We'll keep the same credential bu
   },
   "options": {
     "credentialStatus": {
-      "id": "http://localhost:3004/credentials/status/0#0",
+      "id": "http://localhost:3004/credentials/status/0.0.12345/0#0",
       "type": "StatusList2021Entry",
       "statusListIndex": "0",
       "statusPurpose": "revocation",
-      "statusListCredential": "http://localhost:3004/credentials/status/0"
+      "statusListCredential": "http://localhost:3004/credentials/0.0.12345/status/0"
     }
   }
 }
@@ -69,16 +70,17 @@ First, let's issue a credential with a status. We'll keep the same credential bu
 Essentially, the issuer must track which VC, identified by its own `id`, is tracked in which list, and at which index.
 Each list has a fixed length of 100,000 items for example, and the VC has an index in that list.
 In our example, our VC's status is stored at index `0` in the list with id `0`.
+The status list itself is stored in the HFS file `0.0.12345`. This is the file that was conveniently initialized during the initialization of the service.
 
-If our VC was stored at index `1337` in the status list `2`, the `credentialStatus` option would look like this:
+If our VC was stored in the file `0.0.98765` at index `1337` in the status list `2`, the `credentialStatus` option would look like this:
 
 ```json
 "credentialStatus": {
-  "id": "http://localhost:3004/credentials/status/2#1337",
+  "id": "http://localhost:3004/credentials/status/0.0.98765/2#1337",
   "type": "StatusList2021Entry",
   "statusListIndex": "1337",
   "statusPurpose": "revocation",
-  "statusListCredential": "http://localhost:3004/credentials/status/2"
+  "statusListCredential": "http://localhost:3004/credentials/status/0.0.98765/2"
 }
 ```
 
@@ -137,17 +139,17 @@ curl -X 'POST' \
   },
   "options": {
     "credentialStatus": {
-      "id": "http://localhost:3004/credentials/status/0#0",
+      "id": "http://localhost:3004/credentials/status/0.0.5758797/0#0",
       "type": "StatusList2021Entry",
       "statusListIndex": "0",
       "statusPurpose": "revocation",
-      "statusListCredential": "http://localhost:3004/credentials/status/0"
+      "statusListCredential": "http://localhost:3004/credentials/status/0.0.5758797/0"
     }
   }
 }'
 ```
 
-Which wil result in a `201` with the signed credential:
+Which will result in a `201` with the signed credential:
 
 ```json
 {
@@ -192,18 +194,18 @@ Which wil result in a `201` with the signed credential:
     "userId": 12
   },
   "credentialStatus": {
-    "id": "http://localhost:3004/credentials/status/0#0",
+    "id": "http://localhost:3004/credentials/status/0.0.5758797/0#0",
     "type": "StatusList2021Entry",
     "statusListIndex": "0",
     "statusPurpose": "revocation",
-    "statusListCredential": "http://localhost:3004/credentials/status/0"
+    "statusListCredential": "http://localhost:3004/credentials/status/0.0.5758797/0"
   },
   "proof": {
     "type": "Ed25519Signature2018",
-    "created": "2023-10-27T13:22:54Z",
+    "created": "2023-10-28T10:29:59Z",
     "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
     "proofPurpose": "assertionMethod",
-    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..0A9ic2s7JLbwDmlOVcN9l9hb9w9twA1Zj3rMp8RBjxUgMFD9yhgSY-XeL7G-u58TNPusVmf9uilq8uukxwd4DQ"
+    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..CuZBYm7U8m25Neld_lzTycTN8_MKSMOnMjtm2cFIWQIgJaz-LX-OWH9hqE0VkG1D_roi2yEFyaL8AiHD6L0PDw"
   }
 }
 ```
@@ -212,12 +214,12 @@ Notice that the `credentialStatus` was added to the VC.
 
 ## Status List Verification
 
-Let's take a look at that status list, we can simply issue a `GET on http://localhost:3004/credentials/status/0`.
+Let's take a look at that status list, we can simply issue a `GET on http://localhost:3004/credentials/status/0.0.57587970`.
 This API is public, there's no need to pass in a API_KEY as that url should be accessible by all verifiers.
 
 ```sh
 curl -X 'GET' \
-  'http://localhost:3004/credentials/status/0' \
+  'http://localhost:3004/credentials/status/0.0.5758797/0' \
   -H 'accept: application/json'
 ```
 
@@ -229,25 +231,25 @@ And the `200` response:
     "https://www.w3.org/2018/credentials/v1",
     "https://w3id.org/vc/status-list/2021/v1"
   ],
-  "id": "http://localhost:3004/credentials/status/0",
+  "id": "http://localhost:3004/credentials/status/0.0.5758797/0",
   "type": [
     "VerifiableCredential",
     "StatusList2021Credential"
   ],
   "issuer": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
-  "issuanceDate": "2023-10-27T13:24:22.027Z",
+  "issuanceDate": "2023-10-28T10:30:59.453Z",
   "credentialSubject": {
-    "id": "http://localhost:3004/credentials/status/0#list",
+    "id": "http://localhost:3004/credentials/status/0.0.5758797/0#list",
     "type": "StatusList2021",
     "statusPurpose": "revocation",
-    "encodedList": "H4sIAAAAAAAAA-3BIQEAAAACIKc73RcmoAEAAAAAAAAAAAAAAPgbjSrD2NQwAAA"
+    "encodedList": "H4sIAAAAAAAAA-3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAP4GcwM92tQwAAA"
   },
   "proof": {
     "type": "Ed25519Signature2018",
-    "created": "2023-10-27T13:24:22Z",
+    "created": "2023-10-28T10:30:59Z",
     "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
     "proofPurpose": "assertionMethod",
-    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..7bUbC3kiuHmBv3VgNL2-ngOdKrGnsXlVzVjJviRhCBV0tB6RyK3g2zooMmWA7U7PWvnL8kcFCR2A-jqvpykJBA"
+    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..B_npykktr5SuHBFiaoDMh3HmkimpE7uGLSnqbtesZEmQadHMQ8um51GuAKXoq4q709KBe-NQ1KyexN-Kt_1cCg"
   }
 }
 ```
@@ -321,18 +323,18 @@ curl -X 'POST' \
         "userId": 12
       },
       "credentialStatus": {
-        "id": "http://localhost:3004/credentials/status/0#0",
+        "id": "http://localhost:3004/credentials/status/0.0.5758797/0#0",
         "type": "StatusList2021Entry",
         "statusListIndex": "0",
         "statusPurpose": "revocation",
-        "statusListCredential": "http://localhost:3004/credentials/status/0"
+        "statusListCredential": "http://localhost:3004/credentials/status/0.0.5758797/0"
       },
       "proof": {
         "type": "Ed25519Signature2018",
-        "created": "2023-10-27T13:22:54Z",
+        "created": "2023-10-28T10:29:59Z",
         "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
         "proofPurpose": "assertionMethod",
-        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..0A9ic2s7JLbwDmlOVcN9l9hb9w9twA1Zj3rMp8RBjxUgMFD9yhgSY-XeL7G-u58TNPusVmf9uilq8uukxwd4DQ"
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..CuZBYm7U8m25Neld_lzTycTN8_MKSMOnMjtm2cFIWQIgJaz-LX-OWH9hqE0VkG1D_roi2yEFyaL8AiHD6L0PDw"
       }
     }
   }'
@@ -356,7 +358,7 @@ So far, our VC's status was `valid`. As an issuer, we're able to revoke it. To d
 
 ```
 curl -X 'POST' \
-  'http://localhost:3004/credentials/status/0' \
+  'http://localhost:3004/credentials/status/0.0.5758797/0' \
   -H 'accept: */*' \
   -H 'x-api-key: testKey' \
   -H 'Content-Type: application/json' \
@@ -371,10 +373,10 @@ curl -X 'POST' \
 }'
 ```
 
-Note the `0` at the end of the url, this represents the `id` of the status list itself, which contains 100,000 statuses.
+When revoking a credential, we need to specify the HFS file Id for the status list, `0.0.5758797`, and the id of the status list itself in that file, which is `0`. The status list contains 100,000 statuses.
 We know that the status of our VC is at index `0` so we specifiy it in the `credentialId` field.
 
-If successfully update, the status should be a `204` without content.
+If successfully updated, the status should be a `204` without content.
 
 ## Verification of revoked Verifiable Credential
 
@@ -430,18 +432,18 @@ curl -X 'POST' \
         "userId": 12
       },
       "credentialStatus": {
-        "id": "http://localhost:3004/credentials/status/0#0",
+        "id": "http://localhost:3004/credentials/status/0.0.5758797/0#0",
         "type": "StatusList2021Entry",
         "statusListIndex": "0",
         "statusPurpose": "revocation",
-        "statusListCredential": "http://localhost:3004/credentials/status/0"
+        "statusListCredential": "http://localhost:3004/credentials/status/0.0.5758797/0"
       },
       "proof": {
         "type": "Ed25519Signature2018",
-        "created": "2023-10-27T13:22:54Z",
+        "created": "2023-10-28T10:29:59Z",
         "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
         "proofPurpose": "assertionMethod",
-        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..0A9ic2s7JLbwDmlOVcN9l9hb9w9twA1Zj3rMp8RBjxUgMFD9yhgSY-XeL7G-u58TNPusVmf9uilq8uukxwd4DQ"
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..CuZBYm7U8m25Neld_lzTycTN8_MKSMOnMjtm2cFIWQIgJaz-LX-OWH9hqE0VkG1D_roi2yEFyaL8AiHD6L0PDw"
       }
     }
   }'
@@ -459,7 +461,7 @@ And if we retrieve and test the revocation list:
 
 ```sh
 curl -X 'GET' \
-  'http://localhost:3004/credentials/status/0' \
+  'http://localhost:3004/credentials/status/0.0.5758797/0' \
   -H 'accept: application/json'
 ```
 
@@ -469,25 +471,25 @@ curl -X 'GET' \
     "https://www.w3.org/2018/credentials/v1",
     "https://w3id.org/vc/status-list/2021/v1"
   ],
-  "id": "http://localhost:3004/credentials/status/0",
+  "id": "http://localhost:3004/credentials/status/0.0.5758797/0",
   "type": [
     "VerifiableCredential",
     "StatusList2021Credential"
   ],
   "issuer": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
-  "issuanceDate": "2023-10-27T13:29:23.793Z",
+  "issuanceDate": "2023-10-28T10:45:28.538Z",
   "credentialSubject": {
-    "id": "http://localhost:3004/credentials/status/0#list",
+    "id": "http://localhost:3004/credentials/status/0.0.5758797/0#list",
     "type": "StatusList2021",
     "statusPurpose": "revocation",
     "encodedList": "H4sIAAAAAAAAA-3BIQEAAAACIKc73RcmoAEAAAAAAAAAAAAAAPgbjSrD2NQwAAA"
   },
   "proof": {
     "type": "Ed25519Signature2018",
-    "created": "2023-10-27T13:29:23Z",
+    "created": "2023-10-28T10:45:28Z",
     "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
     "proofPurpose": "assertionMethod",
-    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..jvBvSOjcHTDQ0G7GgC2mkI4bK3RFc5_7cqK63asvX386N9eyyimTCMQhjNpKzP5wDiphaifMe197N40c_wXEDw"
+    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..8wztP3DGyK9_AM_9-EeTObilN5UpBbycTmGtzMhrFxKonqi1xw7LcJMjBwteNaq3C43KIpXxKXinppuqtIwIAg"
   }
 }
 ```

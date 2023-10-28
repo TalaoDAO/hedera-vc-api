@@ -14,7 +14,6 @@ import {
   createStatusList,
   decodeStatusList,
   encodeStatusList,
-  ensureHfsStatusListForCredential,
   hfsGetStatusList,
   hfsUpdateStatusList,
   issueStatusListCredential
@@ -50,7 +49,7 @@ interface UpdateCredentialStatusParams {
   credentialId: string;
   credentialStatus: {
     type: "revocation";
-    status: "true" | "false";
+    status: "true";
   }[];
 }
 
@@ -74,7 +73,6 @@ export class CredentialsController extends Controller {
           ...credential,
           credentialStatus: options.credentialStatus
         };
-        await ensureHfsStatusListForCredential(options.credentialStatus);
       } else {
         credentialWithStatus = credential;
       }
@@ -99,15 +97,21 @@ export class CredentialsController extends Controller {
     return verifyCredential(verifiableCredential);
   }
 
-  @Get("status/{statusListId}")
-  public async getStatusList(@Path() statusListId: number) {
+  @Get("status/{statusListFileId}/{statusListId}")
+  public async getStatusList(@Path() statusListFileId: string, @Path() statusListId: number) {
     const issuerServerName = getEnvVar("ISSUER_SERVER_URL");
 
     if (!issuerServerName) {
       throw new Error(`Unable to issue Status List credential, ISSUER_SERVER_URL isn't set.`);
     }
 
-    const statusList = await hfsGetStatusList(getEnvVar("STATUS_LIST_FILE_ID")!);
+    let statusList;
+
+    try {
+      statusList = await hfsGetStatusList(statusListFileId);
+    } catch (e) {
+      throw new NotFoundError(`Unable to load file id ${statusListFileId}`);
+    }
 
     // If the status list doesn't exist yet, it's not an issue
     // it only exists when a credential in the list is first revoked
@@ -118,12 +122,12 @@ export class CredentialsController extends Controller {
 
     return issueStatusListCredential({
       "@context": ["https://www.w3.org/2018/credentials/v1", "https://w3id.org/vc/status-list/2021/v1"],
-      id: `${issuerServerName}/credentials/status/${statusListId}`,
+      id: `${issuerServerName}/credentials/status/${statusListFileId}/${statusListId}`,
       type: ["VerifiableCredential", "StatusList2021Credential"],
       issuer: getEnvVar("HEDERA_DID")!,
       issuanceDate: new Date().toISOString(),
       credentialSubject: {
-        id: `${issuerServerName}/credentials/status/${statusListId}#list`,
+        id: `${issuerServerName}/credentials/status/${statusListFileId}/${statusListId}#list`,
         type: "StatusList2021",
         statusPurpose: "revocation",
         encodedList: statusList[statusListId]
@@ -131,13 +135,20 @@ export class CredentialsController extends Controller {
     });
   }
 
-  @Post("status/{statusListId}")
+  @Post("status/{statusListFileId}/{statusListId}")
   @Security("api_key")
   public async setStatusList(
+    @Path() statusListFileId: string,
     @Path() statusListId: number,
     @Body() { credentialId, credentialStatus }: UpdateCredentialStatusParams
   ) {
-    const statusList = await hfsGetStatusList(getEnvVar("STATUS_LIST_FILE_ID")!);
+    let statusList;
+
+    try {
+      statusList = await hfsGetStatusList(statusListFileId);
+    } catch (e) {
+      throw new NotFoundError(`Unable to load file id ${statusListFileId}`);
+    }
 
     const id = Number(credentialId);
 
@@ -146,7 +157,7 @@ export class CredentialsController extends Controller {
     }
 
     if (!statusList[statusListId]) {
-      throw new NotFoundError(`statusListId with id ${statusListId} not found.`);
+      statusList[statusListId] = await encodeStatusList(await createStatusList());
     }
 
     const revokedStatus = credentialStatus.find(({ type }) => type === "revocation");
@@ -155,7 +166,7 @@ export class CredentialsController extends Controller {
       const decodedStatusList = await decodeStatusList(statusList[statusListId]);
       decodedStatusList.setStatus(id, true);
       statusList[statusListId] = await encodeStatusList(decodedStatusList);
-      await hfsUpdateStatusList(getEnvVar("STATUS_LIST_FILE_ID")!, statusList);
+      await hfsUpdateStatusList(statusListFileId, statusList);
     }
   }
 }

@@ -1,3 +1,5 @@
+import axios from "axios";
+import contexts from "../lib/contexts";
 import { ClientError } from "../lib/errors";
 import { importVcAndEd25518Suite } from "../lib/nonEsModules";
 import { JSONObject } from "../types/JSON";
@@ -6,6 +8,7 @@ import { loadDidDocument } from "./did";
 import { getEnvVar } from "./envVars";
 import { operatorKey } from "./hedera";
 import { createVerificationSuite } from "./verificationSuite";
+import { checkCredentialStatus } from "./statusList";
 
 export interface Presentation {
   "@context": (string | JSONObject)[];
@@ -40,7 +43,24 @@ export async function createPresentation({
   return vc.createPresentation({
     verifiableCredential,
     id,
-    holder
+    holder,
+    documentLoader: async (url: string) => {
+      if (contexts.has(url)) {
+        return {
+          document: contexts.get(url)
+        };
+      }
+      const { data: document } = await axios.get(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+
+      return {
+        document,
+        documentUrl: url
+      };
+    }
   });
 }
 
@@ -70,7 +90,23 @@ export async function signPresentation({
     presentation,
     suite,
     challenge,
-    documentLoader: vc.defaultDocumentLoader
+    documentLoader: async (url: string) => {
+      if (contexts.has(url)) {
+        return {
+          document: contexts.get(url)
+        };
+      }
+      const { data: document } = await axios.get(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+
+      return {
+        document,
+        documentUrl: url
+      };
+    }
   });
 }
 
@@ -85,7 +121,7 @@ export async function verifyPresentation(presentation: SignedPresentation, chall
     challenge,
     presentation,
     suite: verificationSuite,
-
+    checkStatus: checkCredentialStatus,
     documentLoader: async (url: string) => {
       if (url.startsWith("did:hedera")) {
         return {
@@ -106,7 +142,23 @@ export async function verifyPresentation(presentation: SignedPresentation, chall
         };
       }
 
-      return vc.defaultDocumentLoader(url);
+      if (contexts.has(url)) {
+        return {
+          document: contexts.get(url),
+          documentUrl: url
+        };
+      }
+
+      const { data: document } = await axios.get(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+
+      return {
+        document,
+        documentUrl: url
+      };
     }
   });
 

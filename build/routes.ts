@@ -142,7 +142,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "credentialId": {"dataType":"string","required":true},
-            "credentialStatus": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["true"]},{"dataType":"enum","enums":["false"]}],"required":true},"type":{"dataType":"enum","enums":["revocation"],"required":true}}},"required":true},
+            "credentialStatus": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"dataType":"enum","enums":["true"],"required":true},"type":{"dataType":"enum","enums":["revocation"],"required":true}}},"required":true},
         },
         "additionalProperties": true,
     },
@@ -307,12 +307,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/credentials/status/:statusListId',
+        app.get('/credentials/status/:statusListFileId/:statusListId',
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.getStatusList)),
 
             function CredentialsController_getStatusList(request: any, response: any, next: any) {
             const args = {
+                    statusListFileId: {"in":"path","name":"statusListFileId","required":true,"dataType":"string"},
                     statusListId: {"in":"path","name":"statusListId","required":true,"dataType":"double"},
             };
 
@@ -332,13 +333,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/credentials/status/:statusListId',
+        app.post('/credentials/status/:statusListFileId/:statusListId',
             authenticateMiddleware([{"api_key":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.setStatusList)),
 
             function CredentialsController_setStatusList(request: any, response: any, next: any) {
             const args = {
+                    statusListFileId: {"in":"path","name":"statusListFileId","required":true,"dataType":"string"},
                     statusListId: {"in":"path","name":"statusListId","required":true,"dataType":"double"},
                     undefined: {"in":"body","required":true,"ref":"UpdateCredentialStatusParams"},
             };
