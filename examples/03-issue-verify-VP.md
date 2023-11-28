@@ -72,7 +72,7 @@ Our presentation looks like this:
 
 We can identify the presentation's id `prezid:123`, as well as the holder's identifier `holderid:1243`.
 
-The holder will wrap a number of Verifiable Credentials (they've already been issued and have a proof section) in the Presentation and ask the issuer to sign it.
+The holder will wrap a number of Verifiable Credentials in a `verifiableCredential` array (they've already been issued and have a proof section) in the Presentation and ask the issuer to sign it. The complete payload is wrapped in an object with a `presentation` property and a challenge in an `options` property.
 
 ```sh
 curl -X 'POST' \

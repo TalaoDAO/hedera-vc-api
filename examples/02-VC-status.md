@@ -86,7 +86,7 @@ If our VC was stored in the file `0.0.98765` at index `1337` in the status list 
 
 The `http://localhost:3004` url must be valid url storing another Verifiable Credential with a status list. Replace with the location of your API.
 
-To issue this credential, let's `POST` it to the appropriate url:
+To issue this credential, let's `POST` it to the appropriate url. We still need to wrap it in a payload with a `credential` property, and this time the `options` property won't be empty since it's holding the `credentialStatus`.
 
 ```sh
 curl -X 'POST' \

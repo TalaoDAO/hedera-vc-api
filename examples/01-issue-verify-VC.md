@@ -54,7 +54,7 @@ This will be our credential to issue:
 }
 ```
 
-To issue this credential, we'll call the `POST /credentials/issue` with the credentials and an empty options object.
+To issue this credential, we'll call the `POST /credentials/issue` with the credential wrapped in an object with a `credential` property and an empty `options` object.
 We'll add a few options to the header to specify that we require a `json` back. We'll also pass the API KEY.
 
 ```sh
@@ -168,7 +168,7 @@ To verify this document, I would have to retrieve the identifier's document and 
 
 ## Verifiable Credential Verification
 
-This is exactly what this API's verification method does. We'll pass the signed credential back to `POST /credentials/verify` to verify it:
+This is exactly what this API's verification method does. We'll pass the signed credential back to `POST /credentials/verify` to verify it. To verify this credential, we'll need to wrap it in a payload with a `verifiableCredential` property .
 
 ```sh
 curl -X 'POST' \
