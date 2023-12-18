@@ -3,7 +3,7 @@ import contexts from "../lib/contexts";
 import { ClientError } from "../lib/errors";
 import { importVcAndEd25518Suite } from "../lib/nonEsModules";
 import { JSONObject } from "../types/JSON";
-import { SignedVerifiableCredential } from "./credential";
+import { SignedVerifiableCredential, verifyCredential } from "./credential";
 import { loadDidDocument } from "./did";
 import { getEnvVar } from "./envVars";
 import { operatorKey } from "./hedera";
@@ -117,7 +117,15 @@ export async function verifyPresentation(presentation: SignedPresentation, chall
 
   const { vc } = await importVcAndEd25518Suite();
 
-  const isPresentationVerified = await vc.verify({
+  // First, we need to verify all nested credentials
+  try {
+    await Promise.all(presentation.verifiableCredential.map((credential) => verifyCredential(credential)));
+  } catch (e) {
+    throw new ClientError("Invalid Input!");
+  }
+
+  // Then, we verify the presentation itself
+  const vcVerificationResult = await vc.verify({
     challenge,
     presentation,
     suite: verificationSuite,
@@ -162,7 +170,9 @@ export async function verifyPresentation(presentation: SignedPresentation, chall
     }
   });
 
-  if (isPresentationVerified.verified) {
+  // Here we only care about verifying that the Presentation is valid.
+  // All nested Credentials were already verified before
+  if (vcVerificationResult.presentationResult.verified) {
     return {
       checks: ["proof"],
       warnings: [],
