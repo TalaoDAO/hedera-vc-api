@@ -1,21 +1,17 @@
 # Issue and Verify Verifiable Presentation
 
 We first looked at how to issue and verify credentials for a holder to keep.
-The last step is to present the VC to a verifier.
+The last step is for a holder to present the VC to a verifier.
 
-To issue a Presentation, we'll use the `POST /presentations/prove` api.
+To issue/prove a Presentation, we'll use the `POST /presentations/prove` api.
 
 Our presentation looks like this:
 
 ```json
 {
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1"
-  ],
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
   "id": "prezid:123",
-  "type": [
-    "VerifiablePresentation"
-  ],
+  "type": ["VerifiablePresentation"],
   "holder": "holderid:1243",
   "verifiableCredential": [
     {
@@ -42,10 +38,7 @@ Our presentation looks like this:
         }
       ],
       "id": "did:key:zQ3sharUr4F1zxVK8YJKbzx4qi9X6vsmjkphwj7NAwHLz3p2T",
-      "type": [
-        "VerifiableCredential",
-        "DemoPass"
-      ],
+      "type": ["VerifiableCredential", "DemoPass"],
       "issuer": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
       "issuanceDate": "2010-01-01T19:23:24Z",
       "credentialSubject": {
@@ -68,11 +61,11 @@ Our presentation looks like this:
     }
   ]
 }
-````
+```
 
 We can identify the presentation's id `prezid:123`, as well as the holder's identifier `holderid:1243`.
 
-The holder will wrap a number of Verifiable Credentials in a `verifiableCredential` array (they've already been issued and have a proof section) in the Presentation and ask the issuer to sign it. The complete payload is wrapped in an object with a `presentation` property and a challenge in an `options` property.
+The holder will wrap a number of Verifiable Credentials in a `verifiableCredential` array (they've already been issued and have a proof section) in the Presentation and sign it. The complete payload is wrapped in an object with a `presentation` property and a challenge in an `options` property.
 
 ```sh
 curl -X 'POST' \
@@ -153,12 +146,8 @@ This should return a `201` with a signed VP:
 
 ```json
 {
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1"
-  ],
-  "type": [
-    "VerifiablePresentation"
-  ],
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
+  "type": ["VerifiablePresentation"],
   "verifiableCredential": [
     {
       "@context": [
@@ -184,10 +173,7 @@ This should return a `201` with a signed VP:
         }
       ],
       "id": "did:key:zQ3sharUr4F1zxVK8YJKbzx4qi9X6vsmjkphwj7NAwHLz3p2T",
-      "type": [
-        "VerifiableCredential",
-        "DemoPass"
-      ],
+      "type": ["VerifiableCredential", "DemoPass"],
       "issuer": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
       "issuanceDate": "2010-01-01T19:23:24Z",
       "credentialSubject": {
@@ -213,11 +199,11 @@ This should return a `201` with a signed VP:
   "holder": "holderid:1243",
   "proof": {
     "type": "Ed25519Signature2018",
-    "created": "2023-10-27T13:42:09Z",
-    "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
+    "created": "2023-12-18T07:58:11Z",
+    "verificationMethod": "did:hedera:testnet:zBGujTvDepajDJfndETnYKRNn5xDx4py6t3xNbdbLpKDd_0.0.5787376",
     "proofPurpose": "authentication",
     "challenge": "challenge-123",
-    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..5y4FpK_9lRkBCgzY-osCZU-nENfFK85Z5gyksB7shlnG6kLL64rjdwbo6GMv2Y4K26rSF0jKNjcmOwQk7fd6DQ"
+    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..iy7fpp3Rqh1aVdslsafvqIFgh3wcPAw7e32_RirFlU8TuzA4AcwUUDe3SQYaP1awBh5kEtRd0ETMzp1Gpzj_CQ"
   }
 }
 ```
@@ -292,26 +278,24 @@ curl -X 'POST' \
       "holder": "holderid:1243",
       "proof": {
         "type": "Ed25519Signature2018",
-        "created": "2023-10-27T13:42:09Z",
-        "verificationMethod": "did:hedera:testnet:zDGAu46WcY3W3g3WpivM1SHniCUWSfT16F48v6bk9rGuR_0.0.5758795",
+        "created": "2023-12-18T07:58:11Z",
+        "verificationMethod": "did:hedera:testnet:zBGujTvDepajDJfndETnYKRNn5xDx4py6t3xNbdbLpKDd_0.0.5787376",
         "proofPurpose": "authentication",
         "challenge": "challenge-123",
-        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..5y4FpK_9lRkBCgzY-osCZU-nENfFK85Z5gyksB7shlnG6kLL64rjdwbo6GMv2Y4K26rSF0jKNjcmOwQk7fd6DQ"
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..iy7fpp3Rqh1aVdslsafvqIFgh3wcPAw7e32_RirFlU8TuzA4AcwUUDe3SQYaP1awBh5kEtRd0ETMzp1Gpzj_CQ"
       }
     },
-    "options": {
-      "challenge": "challenge-123"
-    }
-  }'
+      "options": {
+        "challenge": "challenge-123"
+      }
+    }'
 ```
 
 Which should result in a `200`:
 
 ```json
 {
-  "checks": [
-    "proof"
-  ],
+  "checks": ["proof"],
   "warnings": [],
   "errors": []
 }

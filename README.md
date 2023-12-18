@@ -9,7 +9,7 @@ Features it supports:
 1. [Issuer] Generate Hedera DID and DID Document
 2. [Issuer] Issue a Verifiable Credential with a `did:hedera`
 3. [Verifier] Verify Credentials issued by a `did:hedera`
-4. [Issuer] Issue a Verifiable Presentation
+4. [Holder] Prove a Presentation
 5. [Verifier] Verify a Presentation issued by a `did:hedera`
 6. [Issuer] Revoke a Verifiable Presentation using a 2021 Status List.
 
