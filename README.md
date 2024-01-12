@@ -89,7 +89,7 @@ version: "3.8"
 
 services:
   hedera-vc-api:
-    image: meranti/hedera-vc-api:beta-2
+    image: meranti/hedera-vc-api:beta-3
     ports:
       - "3000:3000"
     restart: always
